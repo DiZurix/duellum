@@ -13,7 +13,7 @@ text_duellum = PhotoImage(file='images/text_duellum.gif')
 #text_duellum = text_duellum.zoom(int(C/64))
 text_jouer = PhotoImage(file='images/text_jouer.gif')
 #text_jouer = text_jouer.zoom(int(C/64))
-text_tutoriel = PhotoImage(file='images/text_tutoriel.gif')
+text_options = PhotoImage(file='images/text_options.gif')
 #text_tutoriel = text_tutoriel.zoom(int(C/64))
 text_quitter = PhotoImage(file='images/text_quitter.gif')
 #text_quitter = text_quitter.zoom(int(C/64))
@@ -32,7 +32,7 @@ def menu():
 	b_play_window = can.create_window(M, H/2.75, anchor = 'center', width = 200*C, window = b_play)
 	b_play.configure(bg = color_background, pady = 15, relief = FLAT, command = lambda : start_game())
 
-	b_tutorial = Button(can, image = text_tutoriel)
+	b_tutorial = Button(can, image = text_options)
 	b_tutorial_window = can.create_window(M, H/1.75, anchor = 'center', width = 200*C, window = b_tutorial)
 	b_tutorial.configure(bg = color_background, pady = 15, relief = FLAT, command = tutorial)
 

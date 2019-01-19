@@ -120,4 +120,4 @@ def launch_game():
 	roll_button.configure(bg = 'grey', relief = FLAT, command = launch_dice)
 	root.mainloop()
 
-launch_game()
+#launch_game()

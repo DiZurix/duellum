@@ -29,15 +29,15 @@ def menu():
 	can['bg'] = color_background
 	
 	b_play = Button(can, image = text_jouer)
-	b_play_window = can.create_window(M, H/2.75, anchor = 'center', width = 200*C, window = b_play)
+	b_play_window = can.create_window(M, H/2.75, anchor = 'center', width = 200, window = b_play)
 	b_play.configure(bg = color_background, pady = 15, relief = FLAT, command = lambda : start_game())
 
 	b_tutorial = Button(can, image = text_options)
-	b_tutorial_window = can.create_window(M, H/1.75, anchor = 'center', width = 200*C, window = b_tutorial)
+	b_tutorial_window = can.create_window(M, H/1.75, anchor = 'center', width = 200, window = b_tutorial)
 	b_tutorial.configure(bg = color_background, pady = 15, relief = FLAT, command = tutorial)
 
 	b_exit = Button(can, image = text_quitter)
-	b_exit_window = can.create_window(M, H/1.75 + (H/1.75 - H/2.75), anchor = 'center', width = 200*C, window = b_exit)
+	b_exit_window = can.create_window(M, H/1.75 + (H/1.75 - H/2.75), anchor = 'center', width = 200 , window = b_exit)
 	b_exit.configure(bg = color_background, relief = FLAT, command = lambda : close_window(root))
 
 	text_copyright_img = can.create_image(W+225, H-20, image = text_copyright, anchor = 'center')

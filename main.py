@@ -5,7 +5,7 @@ NbC = 32
 C = 24
 x0, y0 = 2, 2
 remove_dice = 0
-dots_1 = []
+dots = []
 dots_2 = []
         
 root = Tk()
@@ -25,99 +25,87 @@ def launch_game():
 
 	create_grille()
 	
-	def make_dice_1():
+	def make_dice():
 		global remove_dice
-		nb = randint(1, 6)
-		x, y, r = (NbC * C + x0) / 5 - 50, 300*1.25-50, 10
+		nb_de1, nb_de2 = randint(1, 6), randint(1, 6)
+		x1, x2 = (NbC * C + x0) / 5 - 50, (NbC * C + x0) / 5 + 20
+		y, r = 300*1.25-50, 10
+		menu.create_rectangle(x1-5, y-5, x1+47, y+47, width = 1)
+		menu.create_rectangle(x2-5, y-5, x2+47, y+47, width = 1)
 		if remove_dice != 0:
-			for i in range(len(dots_1)):
-				menu.delete(dots_1[i])
+			for i in range(len(dots)):
+				menu.delete(dots[i])
 			remove_dice = 0
-		if nb == 1:
-			dots_1.append(menu.create_oval(x + 16, (y + 16), (x + 16) + r, (y + 16) + r, fill='black'))
+		if nb_de1 == 1:
+			dots.append(menu.create_oval(x1 + 16, (y + 16), (x1 + 16) + r, (y + 16) + r, fill='black'))     #DE1
 			remove_dice += 1
-		elif nb == 2:
-			dots_1.append(menu.create_oval(x, y + 16, x + r, (y + 16) + r, fill='black'))
-			dots_1.append(menu.create_oval(x + 32, (y + 16), (x + 32) + r, (y + 16) + r, fill='black'))
+		if nb_de2 == 1:
+			dots.append(menu.create_oval(x2 + 16, (y + 16), (x2 + 16) + r, (y + 16) + r, fill='black'))     #DE2
 			remove_dice += 1
-		elif nb == 3:
-			dots_1.append(menu.create_oval(x + 16, (y + 16), (x + 16) + r, (y + 16) + r, fill='black'))
-			dots_1.append(menu.create_oval(x + 32, y, (x + 32) + r, y + r, fill='black'))
-			dots_1.append(menu.create_oval(x, y + 32, x + r, (y + 32) + r, fill='black'))
+		if nb_de1 == 2:
+			dots.append(menu.create_oval(x1, y + 16, x1 + r, (y + 16) + r, fill='black'))                   #DE1
+			dots.append(menu.create_oval(x1 + 32, (y + 16), (x1 + 32) + r, (y + 16) + r, fill='black'))
 			remove_dice += 1
-		elif nb == 4:
-			dots_1.append(menu.create_oval(x, y, x + r, y + r, fill='black'))
-			dots_1.append(menu.create_oval(x + 32, y, (x + 32) + r, y + r, fill='black'))
-			dots_1.append(menu.create_oval(x, y + 32, x + r, (y + 32) + r, fill='black'))
-			dots_1.append(menu.create_oval(x + 32, y + 32, (x + 32) + r, (y + 32) + r, fill='black'))
+		if nb_de2 == 2:
+			dots.append(menu.create_oval(x2, y + 16, x2 + r, (y + 16) + r, fill='black'))                   #DE2
+			dots.append(menu.create_oval(x2 + 32, (y + 16), (x2 + 32) + r, (y + 16) + r, fill='black'))
 			remove_dice += 1
-		elif nb == 5:
-			dots_1.append(menu.create_oval(x, y, x + r, y + r, fill='black'))
-			dots_1.append(menu.create_oval(x + 32, y, (x + 32) + r, y + r, fill='black'))
-			dots_1.append(menu.create_oval(x + 16, (y + 16), (x + 16) + r, (y + 16) + r, fill='black'))
-			dots_1.append(menu.create_oval(x, y + 32, x + r, (y + 32) + r, fill='black'))
-			dots_1.append(menu.create_oval(x + 32, y + 32, (x + 32) + r, (y + 32) + r, fill='black'))
+		if nb_de1 == 3:
+			dots.append(menu.create_oval(x1 + 16, (y + 16), (x1 + 16) + r, (y + 16) + r, fill='black'))     #DE1
+			dots.append(menu.create_oval(x1 + 32, y, (x1 + 32) + r, y + r, fill='black'))
+			dots.append(menu.create_oval(x1, y + 32, x1 + r, (y + 32) + r, fill='black'))
 			remove_dice += 1
-		elif nb == 6:
-			dots_1.append(menu.create_oval(x, y, x + r, y + r, fill='black'))
-			dots_1.append(menu.create_oval(x + 32, y, (x + 32) + r, y + r, fill='black'))
-			dots_1.append(menu.create_oval(x, y + 16, x + r, (y + 16) + r, fill='black'))
-			dots_1.append(menu.create_oval(x + 32, (y + 16), (x + 32) + r, (y + 16) + r, fill='black'))
-			dots_1.append(menu.create_oval(x, y + 32, x + r, (y + 32) + r, fill='black'))
-			dots_1.append(menu.create_oval(x + 32, y + 32, (x + 32) + r, (y + 32) + r, fill='black'))
+		if nb_de2 == 3:
+			dots.append(menu.create_oval(x2 + 16, (y + 16), (x2 + 16) + r, (y + 16) + r, fill='black'))     #DE2
+			dots.append(menu.create_oval(x2 + 32, y, (x2 + 32) + r, y + r, fill='black'))
+			dots.append(menu.create_oval(x2, y + 32, x2 + r, (y + 32) + r, fill='black'))
 			remove_dice += 1
-		return nb
-		
-	def make_dice_2():
-		global remove_dice
-		nb = randint(1, 6)
-		x, y, r = (NbC * C + x0) / 5 + 20, 300*1.25-50, 10
-		if remove_dice != 0:
-			for i in range(len(dots_2)):
-				menu.delete(dots_2[i])
-			remove_dice = 0
-		if nb == 1:
-			dots_2.append(menu.create_oval(x + 16, (y + 16), (x + 16) + r, (y + 16) + r, fill='black'))
+		if nb_de1 == 4:
+			dots.append(menu.create_oval(x1, y, x1 + r, y + r, fill='black'))                               #DE1
+			dots.append(menu.create_oval(x1 + 32, y, (x1 + 32) + r, y + r, fill='black'))
+			dots.append(menu.create_oval(x1, y + 32, x1 + r, (y + 32) + r, fill='black'))
+			dots.append(menu.create_oval(x1 + 32, y + 32, (x1 + 32) + r, (y + 32) + r, fill='black'))
 			remove_dice += 1
-		elif nb == 2:
-			dots_2.append(menu.create_oval(x, y + 16, x + r, (y + 16) + r, fill='black'))
-			dots_2.append(menu.create_oval(x + 32, (y + 16), (x + 32) + r, (y + 16) + r, fill='black'))
+		if nb_de2 == 4:
+			dots.append(menu.create_oval(x2, y, x2 + r, y + r, fill='black'))                               #DE2
+			dots.append(menu.create_oval(x2 + 32, y, (x2 + 32) + r, y + r, fill='black'))
+			dots.append(menu.create_oval(x2, y + 32, x2 + r, (y + 32) + r, fill='black'))
+			dots.append(menu.create_oval(x2 + 32, y + 32, (x2 + 32) + r, (y + 32) + r, fill='black'))
 			remove_dice += 1
-		elif nb == 3:
-			dots_2.append(menu.create_oval(x + 16, (y + 16), (x + 16) + r, (y + 16) + r, fill='black'))
-			dots_2.append(menu.create_oval(x + 32, y, (x + 32) + r, y + r, fill='black'))
-			dots_2.append(menu.create_oval(x, y + 32, x + r, (y + 32) + r, fill='black'))
+		if nb_de1 == 5:
+			dots.append(menu.create_oval(x1, y, x1 + r, y + r, fill='black'))                               #DE1
+			dots.append(menu.create_oval(x1 + 32, y, (x1 + 32) + r, y + r, fill='black'))
+			dots.append(menu.create_oval(x1 + 16, (y + 16), (x1 + 16) + r, (y + 16) + r, fill='black'))
+			dots.append(menu.create_oval(x1, y + 32, x1 + r, (y + 32) + r, fill='black'))
+			dots.append(menu.create_oval(x1 + 32, y + 32, (x1 + 32) + r, (y + 32) + r, fill='black'))
 			remove_dice += 1
-		elif nb == 4:
-			dots_2.append(menu.create_oval(x, y, x + r, y + r, fill='black'))
-			dots_2.append(menu.create_oval(x + 32, y, (x + 32) + r, y + r, fill='black'))
-			dots_2.append(menu.create_oval(x, y + 32, x + r, (y + 32) + r, fill='black'))
-			dots_2.append(menu.create_oval(x + 32, y + 32, (x + 32) + r, (y + 32) + r, fill='black'))
+		if nb_de2 == 5:
+			dots.append(menu.create_oval(x2, y, x2 + r, y + r, fill='black'))                               #DE2
+			dots.append(menu.create_oval(x2 + 32, y, (x2 + 32) + r, y + r, fill='black'))
+			dots.append(menu.create_oval(x2 + 16, (y + 16), (x2 + 16) + r, (y + 16) + r, fill='black'))
+			dots.append(menu.create_oval(x2, y + 32, x2 + r, (y + 32) + r, fill='black'))
+			dots.append(menu.create_oval(x2 + 32, y + 32, (x2 + 32) + r, (y + 32) + r, fill='black'))
 			remove_dice += 1
-		elif nb == 5:
-			dots_2.append(menu.create_oval(x, y, x + r, y + r, fill='black'))
-			dots_2.append(menu.create_oval(x + 32, y, (x + 32) + r, y + r, fill='black'))
-			dots_2.append(menu.create_oval(x + 16, (y + 16), (x + 16) + r, (y + 16) + r, fill='black'))
-			dots_2.append(menu.create_oval(x, y + 32, x + r, (y + 32) + r, fill='black'))
-			dots_2.append(menu.create_oval(x + 32, y + 32, (x + 32) + r, (y + 32) + r, fill='black'))
+		if nb_de1 == 6:
+			dots.append(menu.create_oval(x1, y, x1 + r, y + r, fill='black'))                               #DE1
+			dots.append(menu.create_oval(x1 + 32, y, (x1 + 32) + r, y + r, fill='black'))
+			dots.append(menu.create_oval(x1, y + 16, x1 + r, (y + 16) + r, fill='black'))
+			dots.append(menu.create_oval(x1 + 32, (y + 16), (x1 + 32) + r, (y + 16) + r, fill='black'))
+			dots.append(menu.create_oval(x1, y + 32, x1 + r, (y + 32) + r, fill='black'))
+			dots.append(menu.create_oval(x1 + 32, y + 32, (x1 + 32) + r, (y + 32) + r, fill='black'))
 			remove_dice += 1
-		elif nb == 6:
-			dots_2.append(menu.create_oval(x, y, x + r, y + r, fill='black'))
-			dots_2.append(menu.create_oval(x + 32, y, (x + 32) + r, y + r, fill='black'))
-			dots_2.append(menu.create_oval(x, y + 16, x + r, (y + 16) + r, fill='black'))
-			dots_2.append(menu.create_oval(x + 32, (y + 16), (x + 32) + r, (y + 16) + r, fill='black'))
-			dots_2.append(menu.create_oval(x, y + 32, x + r, (y + 32) + r, fill='black'))
-			dots_2.append(menu.create_oval(x + 32, y + 32, (x + 32) + r, (y + 32) + r, fill='black'))
+		if nb_de2 == 6:
+			dots.append(menu.create_oval(x2, y, x2 + r, y + r, fill='black'))                               #DE2
+			dots.append(menu.create_oval(x2 + 32, y, (x2 + 32) + r, y + r, fill='black'))
+			dots.append(menu.create_oval(x2, y + 16, x2 + r, (y + 16) + r, fill='black'))
+			dots.append(menu.create_oval(x2 + 32, (y + 16), (x2 + 32) + r, (y + 16) + r, fill='black'))
+			dots.append(menu.create_oval(x2, y + 32, x2 + r, (y + 32) + r, fill='black'))
+			dots.append(menu.create_oval(x2 + 32, y + 32, (x2 + 32) + r, (y + 32) + r, fill='black'))
 			remove_dice += 1
-		return nb
-		
-	def launch_dice():
-		make_dice_1()
-		make_dice_2()
 	
 	roll_button = Button(menu, text="Lancer dés")
 	roll_button_win = menu.create_window((NbC * C + x0) / 5, 300*1.3, anchor = 'center', width = 150/2, window = roll_button)
-	roll_button.configure(bg = 'grey', relief = FLAT, command = launch_dice)
+	roll_button.configure(bg = 'grey', relief = FLAT, command = make_dice)
 	root.mainloop()
 
 launch_game()

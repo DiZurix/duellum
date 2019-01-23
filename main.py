@@ -1,8 +1,8 @@
 from tkinter import *
 from random import randint
 
-NbC = 32
-C = 24
+NbC = 20
+C = 40
 x0, y0 = 2, 2
 remove_dice = 0
 dots = []
@@ -28,7 +28,7 @@ def launch_game():
 	def make_dice():
 		global remove_dice
 		nb_de1, nb_de2 = randint(1, 6), randint(1, 6)
-		x1, x2 = (NbC * C + x0) / 5 - 50, (NbC * C + x0) / 5 + 20
+		x1, x2 = (NbC * C) / 5 - 45, (NbC * C) / 5 + 15
 		y, r = 300*1.25-50, 10
 		menu.create_rectangle(x1-5, y-5, x1+47, y+47, width = 1)
 		menu.create_rectangle(x2-5, y-5, x2+47, y+47, width = 1)
@@ -104,7 +104,7 @@ def launch_game():
 			remove_dice += 1
 	
 	roll_button = Button(menu, text="Lancer dés")
-	roll_button_win = menu.create_window((NbC * C + x0) / 5, 300*1.3, anchor = 'center', width = 150/2, window = roll_button)
+	roll_button_win = menu.create_window((NbC * C + x0) / 4.9, 300*1.3, anchor = 'center', width = 150/2, window = roll_button)
 	roll_button.configure(bg = 'grey', relief = FLAT, command = make_dice)
 	root.mainloop()
 

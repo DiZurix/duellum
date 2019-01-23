@@ -102,10 +102,16 @@ def launch_game():
 			dots.append(menu.create_oval(x2, y + 32, x2 + r, (y + 32) + r, fill='black'))
 			dots.append(menu.create_oval(x2 + 32, y + 32, (x2 + 32) + r, (y + 32) + r, fill='black'))
 			remove_dice += 1
-	
+		return nb_de1, nb_de2
+
 	roll_button = Button(menu, text="Lancer dés")
-	roll_button_win = menu.create_window((NbC * C + x0) / 4.9, 300*1.3, anchor = 'center', width = 150/2, window = roll_button)
+	roll_button_win = menu.create_window((NbC * C + x0) / 4.9, 410, anchor = 'center',height=50, width = 150*1, window = roll_button)
 	roll_button.configure(bg = 'grey', relief = FLAT, command = make_dice)
+
+	give_up_button = Button(menu, text="Abandonner")
+	give_up_button_win = menu.create_window((NbC * C + x0) / 4.9, 750, anchor = 'center',height=50, width = 150*1, window = give_up_button)
+	give_up_button.configure(bg = 'grey', relief = FLAT, command = None)
+	
 	root.mainloop()
 
 launch_game()

@@ -10,6 +10,8 @@ id1 = []
 nb_de1, nb_de2 = 0, 0
 xi, yi = 25, 25
 player = 1
+state_launch = NORMAL
+nb_shot = 0 
 
 root = Tk()
 root.title('Duellum')
@@ -29,15 +31,20 @@ def launch_game():
 	create_grille()
 	
 	def make_dice():
-		global remove_dice, nb_de1, nb_de2
+		global remove_dice, nb_de1, nb_de2, state_launch, nb_shot
 		nb_de1, nb_de2 = randint(1, 6), randint(1, 6)
 		x1, x2 = (NbC * C) / 5 - 45, (NbC * C) / 5 + 15
 		y, r = 300*1.25-50, 10
 		menu.create_rectangle(x1-5, y-5, x1+47, y+47, width = 1)
 		menu.create_rectangle(x2-5, y-5, x2+47, y+47, width = 1)
+		state_launch = DISABLED
+		button()
 		for i in range(len(id1)):
 			menu.delete(id1[i])
-		id1.append(menu.create_rectangle(xi, yi, xi + nb_de1 * C, yi + nb_de2 * C, fill = 'red'))
+		if player == 1:
+			id1.append(menu.create_rectangle(xi, yi, xi + nb_de1 * C, yi + nb_de2 * C, fill = 'red'))
+		if player == 2:
+			id1.append(menu.create_rectangle(xi, yi, xi + nb_de1 * C, yi + nb_de2 * C, fill = 'blue'))
 		if remove_dice != 0:
 			for i in range(len(dots)):
 				menu.delete(dots[i])
@@ -108,18 +115,22 @@ def launch_game():
 			dots.append(menu.create_oval(x2, y + 32, x2 + r, (y + 32) + r, fill='black'))
 			dots.append(menu.create_oval(x2 + 32, y + 32, (x2 + 32) + r, (y + 32) + r, fill='black'))
 			remove_dice += 1
+		nb_shot = 0
 		return nb_de1, nb_de2
 	
 	def create_rectangle(evt):
-		global player
-		if player == 1:
+		global player, state_launch, nb_shot
+		if player == 1 and nb_shot == 0:
 			xG, yG = evt.x // C * C, evt.y // C * C
 			can.create_rectangle(xG + x0, yG + y0, nb_de1 * C + xG + x0, nb_de2 * C + yG + y0, fill = 'red')
 			player += 1
-		elif player == 2:
+		elif player == 2 and nb_shot == 0:
 			xG, yG = (evt.x + C) // C * C, (evt.y + C) // C * C
-			can.create_rectangle(xG + x0, yG + y0, - nb_de1 * C + xG - x0, - nb_de2 * C  + yG - y0, fill = 'blue')
+			can.create_rectangle(xG + x0, yG + y0, - nb_de1 * C + xG + x0, - nb_de2 * C  + yG + y0, fill = 'blue')
 			player -= 1
+		nb_shot += 1
+		state_launch = NORMAL
+		button()
 
 	def return_rectangle(evt):
 		global nb_de1, nb_de2, id1
@@ -131,16 +142,19 @@ def launch_game():
 		if player == 2:
 			id1.append(menu.create_rectangle(xi, yi, xi + nb_de1 * C, yi + nb_de2 * C, fill = 'blue'))
 
+	def button():
+		roll_button = Button(menu, state = state_launch, text="Lancer dés")
+		roll_button_win = menu.create_window((NbC * C + x0) / 4.9, 410, anchor = 'center', height = 50, width = 150*1, window = roll_button)
+		roll_button.configure(bg = 'grey', relief = FLAT, command = make_dice)
+
+	give_up_button = Button(menu, text="Abandonner")
+	give_up_button_win = menu.create_window((NbC * C + x0) / 4.9, 750, anchor = 'center', height = 50, width = 150*1, window = give_up_button)
+	give_up_button.configure(bg = 'grey', relief = FLAT, command = None)
+	
+	button()
 	
 	can.bind("<Button-1>", create_rectangle)
 	can.bind("<Button-3>", return_rectangle)
-	roll_button = Button(menu, text="Lancer dés")
-	roll_button_win = menu.create_window((NbC * C + x0) / 4.9, 410, anchor = 'center',height=50, width = 150*1, window = roll_button)
-	roll_button.configure(bg = 'grey', relief = FLAT, command = make_dice)
-
-	give_up_button = Button(menu, text="Abandonner")
-	give_up_button_win = menu.create_window((NbC * C + x0) / 4.9, 750, anchor = 'center',height=50, width = 150*1, window = give_up_button)
-	give_up_button.configure(bg = 'grey', relief = FLAT, command = None)
 	
 	root.mainloop()
 

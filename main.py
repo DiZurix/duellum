@@ -117,7 +117,7 @@ def launch_game():
 			can.create_rectangle(xG + x0, yG + y0, nb_de1 * C + xG + x0, nb_de2 * C + yG + y0, fill = 'red')
 			player += 1
 		elif player == 2:
-			xG, yG = evt.x // C * C, evt.y // C * C
+			xG, yG = (evt.x + C) // C * C, (evt.y + C) // C * C
 			can.create_rectangle(xG + x0, yG + y0, - nb_de1 * C + xG - x0, - nb_de2 * C  + yG - y0, fill = 'blue')
 			player -= 1
 

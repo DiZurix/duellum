@@ -7,11 +7,14 @@ x0, y0 = 2, 2
 remove_dice = 0
 dots = []
 id1 = []
+id2 = []
 nb_de1, nb_de2 = 0, 0
 xi, yi = 25, 25
 player = 1
 state_launch = NORMAL
-nb_shot = 0 
+nb_shot = 0
+abandon_j1 = 0
+abandon_j2 = 0
 
 root = Tk()
 root.title('Duellum')
@@ -120,17 +123,29 @@ def launch_game():
 	
 	def create_rectangle(evt):
 		global player, state_launch, nb_shot
-		if player == 1 and nb_shot == 0:
+		if player == 1 and nb_shot == 0 and abandon_j1 != 1:
 			xG, yG = evt.x // C * C, evt.y // C * C
 			can.create_rectangle(xG + x0, yG + y0, nb_de1 * C + xG + x0, nb_de2 * C + yG + y0, fill = 'red')
-			player += 1
-		elif player == 2 and nb_shot == 0:
+			if abandon_j2 != 1:
+				player += 1
+		elif player == 2 and nb_shot == 0 and abandon_j2 != 1:
 			xG, yG = (evt.x + C) // C * C, (evt.y + C) // C * C
 			can.create_rectangle(xG + x0, yG + y0, - nb_de1 * C + xG + x0, - nb_de2 * C  + yG + y0, fill = 'blue')
-			player -= 1
+			if abandon_j1 != 1:
+				player -= 1
 		nb_shot += 1
 		state_launch = NORMAL
 		button()
+
+	def give_up():
+		global abandon_j1, abandon_j2, player
+		if player == 1:
+			abandon_j1 = 1
+			player = 2
+		elif player == 2:
+			abandon_j2 = 1
+			player = 1
+		return player
 
 	def return_rectangle(evt):
 		global nb_de1, nb_de2, id1
@@ -141,6 +156,7 @@ def launch_game():
 			id1.append(menu.create_rectangle(xi, yi, xi + nb_de1 * C, yi + nb_de2 * C, fill = 'red'))
 		if player == 2:
 			id1.append(menu.create_rectangle(xi, yi, xi + nb_de1 * C, yi + nb_de2 * C, fill = 'blue'))
+		mvt_rect(evt)
 
 	def button():
 		roll_button = Button(menu, state = state_launch, text="Lancer dés")
@@ -149,12 +165,22 @@ def launch_game():
 
 	give_up_button = Button(menu, text="Abandonner")
 	give_up_button_win = menu.create_window((NbC * C + x0) / 4.9, 750, anchor = 'center', height = 50, width = 150*1, window = give_up_button)
-	give_up_button.configure(bg = 'grey', relief = FLAT, command = None)
+	give_up_button.configure(bg = 'grey', relief = FLAT, command = give_up)
 	
 	button()
 	
+	def mvt_rect(evt):
+		reduc = 5
+		for i in range(len(id2)):
+			can.delete(id2[i])
+		if player == 1 and state_launch == DISABLED:
+			id2.append(can.create_rectangle(evt.x - reduc, evt.y - reduc, nb_de1 * C + evt.x + x0 - reduc, nb_de2 * C + evt.y + y0 - reduc, fill = 'red'))
+		if player == 2 and state_launch == DISABLED:
+			id2.append(can.create_rectangle(evt.x + reduc, evt.y + reduc, - nb_de1 * C + evt.x + x0 + reduc, - nb_de2 * C + evt.y + y0 + reduc, fill = 'blue'))
+
 	can.bind("<Button-1>", create_rectangle)
 	can.bind("<Button-3>", return_rectangle)
+	can.bind('<Motion>', mvt_rect)
 	
 	root.mainloop()
 

@@ -126,8 +126,7 @@ def launch_game():
 		if place_here <= 0:
 			for i in range(len(rect_list)):
 				for nb_1 in range(nb_de1 + 1):
-					for nb_2 in range(nb_de2 + 1):
-						print(nb_1, nb_2)	
+					for nb_2 in range(nb_de2 + 1):	
 						if can.coords(rect_list[i])[2] > float(nb_1 * C + xG + x0) and can.coords(rect_list[i])[3] > float(nb_2 * C + yG + y0) and can.coords(rect_list[i])[0] < float(nb_1 * C + xG + x0) and can.coords(rect_list[i])[1] < float(nb_2 * C + yG + y0) and player == 1:
 							print('ERROR CUBE J1') #CUBE J1
 							dont_do_this += 1						

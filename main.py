@@ -154,7 +154,7 @@ def launch_game():
 						if can.coords(rect_list[k])[2] >= float(- nb_1 * C + xG2 + x0) and can.coords(rect_list[k])[3] >= float(- nb_2 * C + yG2 + y0) and can.coords(rect_list[k])[0] <= float(- nb_1 * C + xG2 + x0) and can.coords(rect_list[k])[1] <= float(- nb_2 * C + yG2 + y0) and player == 2:
 							#COLLISION J2
 							place_here += 1
-			nb_2 = 0
+				nb_2 = 0
 		if dont_do_this == 0:
 			if player == 1 and nb_shot == 0 and abandon_j1 != 1:
 				if first_time == 2 and xG == 0 and yG == 0:

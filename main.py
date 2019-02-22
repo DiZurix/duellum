@@ -16,8 +16,9 @@ state_launch = NORMAL
 nb_shot = 0
 abandon_j1 = 0
 abandon_j2 = 0
-dont_do_this = 0
-place_here = 0
+first_time = 2
+compt_red, compt_blue = [], []
+break_this = 0
 
 root = Tk()
 root.title("Duellum")
@@ -119,46 +120,60 @@ def launch_game():
 		return nb_de1, nb_de2
 	
 	def create_rectangle(evt):
-		global player, state_launch, nb_shot, dont_do_this, place_here
+		global player, state_launch, nb_shot, first_time, compt_red, compt_blue
 		xG, yG = evt.x // C * C, evt.y // C * C
 		xG2, yG2 = (evt.x + C) // C * C, (evt.y + C) // C * C
 		dont_do_this = 0
-		if place_here <= 0:
-			for i in range(len(rect_list)):
-				for nb_1 in range(nb_de1 + 1):
-					for nb_2 in range(nb_de2 + 1):	
-						if can.coords(rect_list[i])[2] > float(nb_1 * C + xG + x0) and can.coords(rect_list[i])[3] > float(nb_2 * C + yG + y0) and can.coords(rect_list[i])[0] < float(nb_1 * C + xG + x0) and can.coords(rect_list[i])[1] < float(nb_2 * C + yG + y0) and player == 1:
-							print('ERROR CUBE J1') #CUBE J1
-							dont_do_this += 1						
-						if can.coords(rect_list[i])[2] > float(- nb_1 * C + xG2 + x0) and can.coords(rect_list[i])[3] > float(- nb_2 * C + yG2 + y0) and can.coords(rect_list[i])[0] < float(- nb_1 * C + xG2 + x0) and can.coords(rect_list[i])[1] < float(- nb_2 * C + yG2 + y0) and player == 2:
-							print('ERROR CUBE J2') #CUBE J2
-							dont_do_this += 1
-						if can.coords(rect_list[i])[2] > float(xG + x0) and can.coords(rect_list[i])[3] > float(yG + x0) and can.coords(rect_list[i])[0] < float(xG + x0) and can.coords(rect_list[i])[1] < float(yG + x0) and player == 1:
-							print('ERROR EVT J1')	#evt J1
-							dont_do_this += 1
-						if can.coords(rect_list[i])[2] > float(xG + C + x0) and can.coords(rect_list[i])[3] > float(yG + C + x0) and can.coords(rect_list[i])[0] < float(xG + C + x0) and can.coords(rect_list[i])[1] < float(yG + C + x0) and player == 2:
-							print('ERROR EVT J2')	#evt J2
-							dont_do_this += 1
-				nb_2 = 0
+		place_here = 0
+		for i in range(len(rect_list)):
+			if can.itemcget((rect_list[i]), 'fill') == 'red':
+				if compt_red.count(i) == 0:
+					compt_red.append(i)
+			elif can.itemcget((rect_list[i]), 'fill') == 'blue':
+				if compt_blue.count(i) == 0:
+					compt_blue.append(i)
+			for nb_1 in range(nb_de1 + 1):
+				for nb_2 in range(nb_de2 + 1):	
+					if can.coords(rect_list[i])[2] > float(nb_1 * C + xG + x0) and can.coords(rect_list[i])[3] > float(nb_2 * C + yG + y0) and can.coords(rect_list[i])[0] < float(nb_1 * C + xG + x0) and can.coords(rect_list[i])[1] < float(nb_2 * C + yG + y0) and player == 1:
+						#CUBE J1
+						dont_do_this += 1
+					if can.coords(rect_list[i])[2] > float(- nb_1 * C + xG2 + x0) and can.coords(rect_list[i])[3] > float(- nb_2 * C + yG2 + y0) and can.coords(rect_list[i])[0] < float(- nb_1 * C + xG2 + x0) and can.coords(rect_list[i])[1] < float(- nb_2 * C + yG2 + y0) and player == 2:
+						#CUBE J2
+						dont_do_this += 1
+					if can.coords(rect_list[i])[2] > float(xG + x0) and can.coords(rect_list[i])[3] > float(yG + x0) and can.coords(rect_list[i])[0] < float(xG + x0) and can.coords(rect_list[i])[1] < float(yG + x0) and player == 1:
+						#evt J1
+						dont_do_this += 1
+					if can.coords(rect_list[i])[2] > float(xG + C + x0) and can.coords(rect_list[i])[3] > float(yG + C + x0) and can.coords(rect_list[i])[0] < float(xG + C + x0) and can.coords(rect_list[i])[1] < float(yG + C + x0) and player == 2:
+						#evt J2
+						dont_do_this += 1
+					for k in compt_red:
+						if can.coords(rect_list[k])[2] >= float(nb_1 * C + xG + x0) and can.coords(rect_list[k])[3] >= float(nb_2 * C + yG + y0) and can.coords(rect_list[k])[0] <= float(nb_1 * C + xG + x0) and can.coords(rect_list[k])[1] <= float(nb_2 * C + yG + y0) and player == 1:
+							#COLLISION J1
+							place_here += 1
+					for k in compt_blue:
+						if can.coords(rect_list[k])[2] >= float(- nb_1 * C + xG2 + x0) and can.coords(rect_list[k])[3] >= float(- nb_2 * C + yG2 + y0) and can.coords(rect_list[k])[0] <= float(- nb_1 * C + xG2 + x0) and can.coords(rect_list[k])[1] <= float(- nb_2 * C + yG2 + y0) and player == 2:
+							#COLLISION J2
+							place_here += 1
+			nb_2 = 0
 		if dont_do_this == 0:
 			if player == 1 and nb_shot == 0 and abandon_j1 != 1:
-				if nb_de1 * C + xG + x0 > 0 and nb_de1 * C + xG + x0 <= NbC * C + x0 and nb_de2 * C + yG + y0 > 0 and nb_de2 * C + yG + y0 <= NbC * C + x0:
+				if first_time == 2 and xG == 0 and yG == 0:
 					rect_list.append(can.create_rectangle(xG + x0, yG + y0, nb_de1 * C + xG + x0, nb_de2 * C + yG + y0, fill = 'red'))
 					can.create_text(nb_de1 / 2 * C + xG, nb_de2 / 2 * C + yG, text = nb_de1 * nb_de2, anchor = CENTER, fill = 'white')
-					place_here = 0
-				else:
-					place_here += 1
-					create_rectangle(evt)
+					first_time -= 1
+				elif nb_de1 * C + xG + x0 > 0 and nb_de1 * C + xG + x0 <= NbC * C + x0 and nb_de2 * C + yG + y0 > 0 and nb_de2 * C + yG + y0 <= NbC * C + x0 and first_time == 0 and place_here > 0:
+					rect_list.append(can.create_rectangle(xG + x0, yG + y0, nb_de1 * C + xG + x0, nb_de2 * C + yG + y0, fill = 'red'))
+					can.create_text(nb_de1 / 2 * C + xG, nb_de2 / 2 * C + yG, text = nb_de1 * nb_de2, anchor = CENTER, fill = 'white')
 				if abandon_j2 != 1:
 					player += 1
 			elif player == 2 and nb_shot == 0 and abandon_j2 != 1:
-				if -nb_de1 * C + xG2 + x0 > 0 and -nb_de1 * C + xG2 + x0 <= NbC * C + x0 and -nb_de2 * C + yG2 + y0 > 0 and -nb_de2 * C + yG2 + y0 <= NbC * C + x0:
+				if first_time == 1 and xG2 == NbC * C and yG2 == NbC * C:
 					rect_list.append(can.create_rectangle(xG2 + x0, yG2 + y0, - nb_de1 * C + xG2 + x0, - nb_de2 * C + yG2 + y0, fill = 'blue'))
 					can.create_text(- nb_de1 / 2 * C + xG2, - nb_de2 / 2 * C + yG2, text = nb_de1 * nb_de2, anchor = CENTER, fill = 'white')
-					place_here = 0
-				else:
-					place_here += 1
-					create_rectangle(evt)
+					first_time = first_time - 1
+				elif -nb_de1 * C + xG2 + x0 > 0 and -nb_de1 * C + xG2 + x0 <= NbC * C + x0 and -nb_de2 * C + yG2 + y0 > 0 and -nb_de2 * C + yG2 + y0 <= NbC * C + x0 and first_time == 0 and place_here > 0:
+					rect_list.append(can.create_rectangle(xG2 + x0, yG2 + y0, - nb_de1 * C + xG2 + x0, - nb_de2 * C + yG2 + y0, fill = 'blue'))
+					can.create_text(- nb_de1 / 2 * C + xG2, - nb_de2 / 2 * C + yG2, text = nb_de1 * nb_de2, anchor = CENTER, fill = 'white')
 				if abandon_j1 != 1:
 					player -= 1
 			nb_shot += 1

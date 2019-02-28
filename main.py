@@ -35,8 +35,6 @@ def launch_game():
 			can.create_line(x0 + C * i, y0, x0 + C * i, y0 + NbC * C, width = 1)
 			can.create_line(x0, y0 + C * i, x0 + NbC * C, y0 + C * i, width = 1)
 
-	create_grille()
-	
 	def make_dice():
 		global remove_dice, nb_de1, nb_de2, state_launch, nb_shot
 		nb_de1, nb_de2 = randint(1, 6), randint(1, 6)
@@ -118,7 +116,7 @@ def launch_game():
 			remove_dice += 1
 		nb_shot = 0
 		return nb_de1, nb_de2
-	
+
 	def create_rectangle(evt):
 		global player, state_launch, nb_shot, first_time, compt_red, compt_blue
 		xG, yG = evt.x // C * C, evt.y // C * C
@@ -133,7 +131,7 @@ def launch_game():
 				if compt_blue.count(i) == 0:
 					compt_blue.append(i)
 			for nb_1 in range(nb_de1 + 1):
-				for nb_2 in range(nb_de2 + 1):	
+				for nb_2 in range(nb_de2 + 1):
 					if can.coords(rect_list[i])[2] > float(nb_1 * C + xG + x0) and can.coords(rect_list[i])[3] > float(nb_2 * C + yG + y0) and can.coords(rect_list[i])[0] < float(nb_1 * C + xG + x0) and can.coords(rect_list[i])[1] < float(nb_2 * C + yG + y0) and player == 1:
 						#CUBE J1
 						dont_do_this += 1
@@ -164,6 +162,8 @@ def launch_game():
 				elif nb_de1 * C + xG + x0 > 0 and nb_de1 * C + xG + x0 <= NbC * C + x0 and nb_de2 * C + yG + y0 > 0 and nb_de2 * C + yG + y0 <= NbC * C + x0 and first_time == 0 and place_here > 0:
 					rect_list.append(can.create_rectangle(xG + x0, yG + y0, nb_de1 * C + xG + x0, nb_de2 * C + yG + y0, fill = 'red'))
 					can.create_text(nb_de1 / 2 * C + xG, nb_de2 / 2 * C + yG, text = nb_de1 * nb_de2, anchor = CENTER, fill = 'white')
+				else:
+					create_rectangle()
 				if abandon_j2 != 1:
 					player += 1
 			elif player == 2 and nb_shot == 0 and abandon_j2 != 1:
@@ -174,6 +174,8 @@ def launch_game():
 				elif -nb_de1 * C + xG2 + x0 > 0 and -nb_de1 * C + xG2 + x0 <= NbC * C + x0 and -nb_de2 * C + yG2 + y0 > 0 and -nb_de2 * C + yG2 + y0 <= NbC * C + x0 and first_time == 0 and place_here > 0:
 					rect_list.append(can.create_rectangle(xG2 + x0, yG2 + y0, - nb_de1 * C + xG2 + x0, - nb_de2 * C + yG2 + y0, fill = 'blue'))
 					can.create_text(- nb_de1 / 2 * C + xG2, - nb_de2 / 2 * C + yG2, text = nb_de1 * nb_de2, anchor = CENTER, fill = 'white')
+				else:
+					create_rectangle()
 				if abandon_j1 != 1:
 					player -= 1
 			nb_shot += 1
@@ -218,12 +220,10 @@ def launch_game():
 	give_up_button = Button(menu, text = "Abandonner")
 	give_up_button_win = menu.create_window((NbC * C + x0) / 4.9, 750, anchor = 'center', height = 50, width = 150*1, window = give_up_button)
 	give_up_button.configure(bg = 'grey', relief = FLAT, command = give_up)
-	
+
 	button()
-	def clic(event):
-		print("x="+ str(event.x)+ " --- y=" + str(event.y))
-	
-	can.bind("<Button-2>", clic)
+	create_grille()
+
 	can.bind('<Button-1>', create_rectangle)
 	can.bind('<Button-3>', return_rectangle)
 	can.bind('<ButtonRelease>', mvt_rect)
@@ -231,4 +231,4 @@ def launch_game():
 	
 	root.mainloop()
 
-launch_game() #find_overlapping
+launch_game()

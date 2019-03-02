@@ -19,6 +19,8 @@ abandon_j2 = 0
 first_time = 2
 compt_red, compt_blue = [], []
 break_this = 0
+roller_dice = 6
+time_dice = 400
 
 root = Tk()
 root.title("Duellum")
@@ -36,7 +38,7 @@ def launch_game():
 			can.create_line(x0, y0 + C * i, x0 + NbC * C, y0 + C * i, width = 1)
 
 	def make_dice():
-		global remove_dice, nb_de1, nb_de2, state_launch, nb_shot
+		global remove_dice, nb_de1, nb_de2, state_launch, nb_shot, roller_dice, time_dice
 		nb_de1, nb_de2 = randint(1, 6), randint(1, 6)
 		x1, x2 = (NbC * C) / 5 - 45, (NbC * C) / 5 + 15
 		y, r = 300*1.25-50, 10
@@ -115,10 +117,16 @@ def launch_game():
 			dots.append(menu.create_oval(x2 + 32, y + 32, (x2 + 32) + r, (y + 32) + r, fill='black'))
 			remove_dice += 1
 		nb_shot = 0
-		return nb_de1, nb_de2
+		if roller_dice > 0:
+			roller_dice -= 1
+			time_dice += 40
+			menu.after(time_dice, make_dice)
+		else:
+			time_dice = 400
+		return nb_de1, nb_de2, roller_dice
 
 	def create_rectangle(evt):
-		global player, state_launch, nb_shot, first_time, compt_red, compt_blue
+		global player, state_launch, nb_shot, first_time, compt_red, compt_blue, roller_dice
 		xG, yG = evt.x // C * C, evt.y // C * C
 		xG2, yG2 = (evt.x + C) // C * C, (evt.y + C) // C * C
 		dont_do_this = 0
@@ -153,7 +161,8 @@ def launch_game():
 							#COLLISION J2
 							place_here += 1
 				nb_2 = 0
-		if dont_do_this == 0:
+		if dont_do_this == 0 and roller_dice == 0:
+			roller_dice = 6
 			if player == 1 and nb_shot == 0 and abandon_j1 != 1:
 				if first_time == 2 and xG == 0 and yG == 0:
 					rect_list.append(can.create_rectangle(xG + x0, yG + y0, nb_de1 * C + xG + x0, nb_de2 * C + yG + y0, fill = 'red'))
@@ -207,7 +216,7 @@ def launch_game():
 		roll_button = Button(menu, state = state_launch, text = "Lancer dés")
 		roll_button_win = menu.create_window((NbC * C + x0) / 4.9, 410, anchor = 'center', height = 50, width = 150*1, window = roll_button)
 		roll_button.configure(bg = 'grey', relief = FLAT, command = make_dice)
-		
+
 	def mvt_rect(evt):
 		reduc = 5
 		for i in range(len(id2)):
@@ -228,7 +237,7 @@ def launch_game():
 	can.bind('<Button-3>', return_rectangle)
 	can.bind('<ButtonRelease>', mvt_rect)
 	can.bind('<Motion>', mvt_rect)
-	
+
 	root.mainloop()
 
 launch_game()

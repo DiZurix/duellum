@@ -213,7 +213,7 @@ def launch_game():
             if bn == "yes":
                     menu.pack_forget()
                     can.pack_forget()
-                    launch_game()
+                    reinitial()
         
             
         state_launch = NORMAL
@@ -265,7 +265,32 @@ def launch_game():
             score_joueur2 = menu.create_text((NbC * C + x0) / 3.6, 575, text=scorej2, font = ("Courier",35),fill = 'blue')
             menu.itemconfigure(score_joueur2, text=str(scorej2))
             print(scorej2)
-            
+    def reinitial():
+            global NbC, C, x0,y0,remove_dice,dots,id1,id2,rect_list,nb_de1,nb_de2,xi,yi,player,state_launch,nb_shot,abandon_j1,abandon_j2,first_time,compt_red,compt_blue,break_this,score_joueur1,score_joueur2,scorej1,scorej2
+            NbC = 20
+            C = 40
+            x0, y0 = 2, 2
+            remove_dice = 0
+            dots = []
+            id1 = []
+            id2 = []
+            rect_list = []
+            nb_de1, nb_de2 = 0, 0
+            xi, yi = 25, 25
+            player = 1
+            state_launch = NORMAL
+            nb_shot = 0
+            abandon_j1 = 0
+            abandon_j2 = 0
+            first_time = 2
+            compt_red, compt_blue = [], []
+            break_this = 0
+            score_joueur1=0
+            score_joueur2=0
+            scorej1=0
+            scorej2=0
+            launch_game()
+             
     give_up_button = Button(menu, text = "Abandonner")
     give_up_button_win = menu.create_window((NbC * C + x0) / 4.9, 750, anchor = 'center', height = 50, width = 150*1, window = give_up_button)
     give_up_button.configure(bg = 'grey', relief = FLAT, command = give_up)

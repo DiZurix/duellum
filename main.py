@@ -263,10 +263,10 @@ def launch_game(): #LANCEMENT DU PROGRAMME PRINCIPALE
 	create_grille()
 	button()
 
+	can.event_add('<<panic>>', '<Motion>', '<ButtonRelease>')
 	can.bind('<Button-1>', create_rectangle)
 	can.bind('<Button-3>', return_rectangle)
-	can.bind('<ButtonRelease>', mvt_rect)
-	can.bind('<Motion>', mvt_rect)
+	can.bind('<<panic>>', mvt_rect)
 
 	root.mainloop()
 

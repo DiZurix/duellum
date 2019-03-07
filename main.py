@@ -2,7 +2,7 @@ from tkinter import *
 from random import randint
 from tkinter import messagebox
 
-NbC = 20							#Nombre de carré sur la grille pour X et Y
+NbC = 20							#Nombre de carré sur une colonne/ligne
 C = 40								#Taille des carrés
 x0, y0 = 2, 2						#Position initiale pour la grille
 remove_dice = 0						#Variable pour supprimer les dés
@@ -13,8 +13,7 @@ nb_de1, nb_de2 = 0, 0				#Variable contenant la valeur des dés
 player = 1							#Variable qui détermine quelle est le joueur actuel (1 = J1, 2 = J2)
 state_launch = NORMAL				#Désactive ou non le boutton 'Lancer'
 nb_shot = 0							#Variable qui permet de savoir si le joueur a déjà joué ou non
-abandon_j1 = 0						#Variable qui permet de savoir si J1 a abandonné ou non
-abandon_j2 = 0						#Variable qui permet de savoir si J2 a abandonné ou non
+abandon_j1, abandon_j2 = 0, 0		#Variable qui permet de savoir si J1/J2 a abandonné ou non
 first_attempt = 0					#Variable qui détermine les 2 premiers coups de la partie
 compt_red, compt_blue = [], []		#Liste qui contient les rectangles rouges/bleus
 score_joueur1 = 0					#??
@@ -38,7 +37,7 @@ def launch_game(): #LANCEMENT DU PROGRAMME PRINCIPALE
 			can.create_line(x0, y0 + C * i, x0 + NbC * C, y0 + C * i, width = 1)
 
 	def make_dice(): #FONCTION POUR CREER LES DES
-		global remove_dice, nb_de1, nb_de2, state_launch, nb_shot, roller_dice, time_dice
+		global remove_dice, nb_de1, nb_de2, state_launch, nb_shot
 		nb_de1, nb_de2 = randint(1, 6), randint(1, 6)
 		x1, x2 = (NbC * C) / 5 - 45, (NbC * C) / 5 + 15
 		y, r = 325, 10
@@ -108,8 +107,8 @@ def launch_game(): #LANCEMENT DU PROGRAMME PRINCIPALE
 		nb_shot = 0
 		return nb_de1, nb_de2
 
-	def create_rectangle(evt): #FONCTION POUR CREER LES RECTANGLES
-		global player, state_launch, nb_shot, first_attempt, compt_red, compt_blue, roller_dice
+	def create_rect(evt): #FONCTION POUR CREER LES RECTANGLES
+		global player, state_launch, nb_shot, first_attempt, compt_red, compt_blue
 		xG, yG = evt.x // C * C, evt.y // C * C
 		xG2, yG2 = (evt.x + C) // C * C, (evt.y + C) // C * C
 		placement_error = 0
@@ -123,6 +122,7 @@ def launch_game(): #LANCEMENT DU PROGRAMME PRINCIPALE
 					compt_blue.append(i)
 			for nb_1 in range(nb_de1 + 1):
 				for nb_2 in range(nb_de2 + 1):
+					print(nb_2)
 					if placement_error > 0:
 						break
 					if can.coords(rect_list[i])[2] > float(nb_1 * C + xG + x0) and can.coords(rect_list[i])[3] > float(nb_2 * C + yG + y0) and can.coords(rect_list[i])[0] < float(nb_1 * C + xG + x0) and can.coords(rect_list[i])[1] < float(nb_2 * C + yG + y0) and player == 1:
@@ -166,7 +166,7 @@ def launch_game(): #LANCEMENT DU PROGRAMME PRINCIPALE
 				if abandon_j1 != 1:
 					player -= 1
 			else:
-				create_rectangle()
+				create_rect(evt)
 			nb_shot += 1
 			state_launch = NORMAL
 			button()
@@ -222,17 +222,17 @@ def launch_game(): #LANCEMENT DU PROGRAMME PRINCIPALE
 			moving_rect.append(can.create_rectangle(evt.x + reduc, evt.y + reduc, - nb_de1 * C + evt.x + x0 + reduc, - nb_de2 * C + evt.y + y0 + reduc, fill = 'blue'))
 
 	def score(): #FONCTION QUI AFFICHE LES SCORES
-		global score_joueur1, score_joueur2, nb_de1, nb_de2, player, scorej1, scorej2
+		global score_joueur1, score_joueur2, scorej1, scorej2
 		if player == 2 and abandon_j1 == 0 or abandon_j2 == 2:
-			scorej1 += nb_de1*nb_de2
+			scorej1 += nb_de1 * nb_de2
 			menu.delete(score_joueur1)
-			score_joueur1 = menu.create_text((NbC * C + x0) / 8.4, 575, text=scorej1, font = ("Courier",35),fill = 'red')
+			score_joueur1 = menu.create_text((NbC * C + x0) / 8.4, 575, text = scorej1, font = ("Courier",35),fill = 'red')
 			menu.itemconfigure(score_joueur1, text=str(scorej1))
 		if player == 1 and abandon_j2 == 0 or abandon_j1 == 1:
-			scorej2 += nb_de1*nb_de2
+			scorej2 += nb_de1 * nb_de2
 			menu.delete(score_joueur2)
-			score_joueur2 = menu.create_text((NbC * C + x0) / 3.6, 575, text=scorej2, font = ("Courier",35),fill = 'blue')
-			menu.itemconfigure(score_joueur2, text=str(scorej2))
+			score_joueur2 = menu.create_text((NbC * C + x0) / 3.6, 575, text = scorej2, font = ("Courier",35),fill = 'blue')
+			menu.itemconfigure(score_joueur2, text = str(scorej2))
 
 	def reinitial(): #FONCTION QUI SERT A METTRE LES VARIABLES A LEUR ETAT INITIALE
 		global remove_dice, dots, moving_rect, rect_list, player, nb_de1, nb_de2, abandon_j1, abandon_j2, first_attempt, compt_red, compt_blue, score_joueur1, score_joueur2, scorej1, scorej2
@@ -264,7 +264,7 @@ def launch_game(): #LANCEMENT DU PROGRAMME PRINCIPALE
 	button()
 
 	can.event_add('<<panic>>', '<Motion>', '<ButtonRelease>')
-	can.bind('<Button-1>', create_rectangle)
+	can.bind('<Button-1>', create_rect)
 	can.bind('<Button-3>', return_rectangle)
 	can.bind('<<panic>>', mvt_rect)
 

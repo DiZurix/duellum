@@ -1,29 +1,26 @@
 from tkinter import *
 from random import randint
 from tkinter import messagebox
-NbC = 20
-C = 40
-x0, y0 = 2, 2
-remove_dice = 0
-dots = []
-id1 = []
-id2 = []
-rect_list = []
-nb_de1, nb_de2 = 0, 0
-xi, yi = 25, 25
-player = 1
-state_launch = NORMAL
-nb_shot = 0
-abandon_j1 = 0
-abandon_j2 = 0
-first_attempt = 2
-compt_red, compt_blue = [], []
-break_this = 0
-score_joueur1 = 0
-score_joueur2 = 0
-scorej1 = 0
-scorej2 = 0
 
+NbC = 20							#Nombre de carré sur la grille pour X et Y
+C = 40								#Taille des carrés
+x0, y0 = 2, 2						#Position initiale pour la grille
+remove_dice = 0						#Variable pour supprimer les dés
+dots = []							#Liste contenant les dés
+moving_rect = []					#Liste qui gérer le déplacement du cube
+rect_list = []						#Liste qui contient les rectangles crées
+nb_de1, nb_de2 = 0, 0				#Variable contenant la valeur des dés
+player = 1							#Variable qui détermine quelle est le joueur actuel (1 = J1, 2 = J2)
+state_launch = NORMAL				#Désactive ou non le boutton 'Lancer'
+nb_shot = 0							#Variable qui permet de savoir si le joueur a déjà joué ou non
+abandon_j1 = 0						#Variable qui permet de savoir si J1 a abandonné ou non
+abandon_j2 = 0						#Variable qui permet de savoir si J2 a abandonné ou non
+first_attempt = 0					#Variable qui détermine les 2 premiers coups de la partie
+compt_red, compt_blue = [], []		#Liste qui contient les rectangles rouges/bleus
+score_joueur1 = 0					#??
+score_joueur2 = 0					#??
+scorej1 = 0							#??
+scorej2 = 0							#??
 
 root = Tk()
 root.title("Duellum")
@@ -126,6 +123,8 @@ def launch_game(): #LANCEMENT DU PROGRAMME PRINCIPALE
 					compt_blue.append(i)
 			for nb_1 in range(nb_de1 + 1):
 				for nb_2 in range(nb_de2 + 1):
+					if placement_error > 0:
+						break
 					if can.coords(rect_list[i])[2] > float(nb_1 * C + xG + x0) and can.coords(rect_list[i])[3] > float(nb_2 * C + yG + y0) and can.coords(rect_list[i])[0] < float(nb_1 * C + xG + x0) and can.coords(rect_list[i])[1] < float(nb_2 * C + yG + y0) and player == 1:
 						placement_error += 1	#REGARDE SI LE RECTANGLE DU J1 N'EST PAS EN COLLISION AVEC LES AUTRES
 					if can.coords(rect_list[i])[2] > float(- nb_1 * C + xG2 + x0) and can.coords(rect_list[i])[3] > float(- nb_2 * C + yG2 + y0) and can.coords(rect_list[i])[0] < float(- nb_1 * C + xG2 + x0) and can.coords(rect_list[i])[1] < float(- nb_2 * C + yG2 + y0) and player == 2:
@@ -141,35 +140,40 @@ def launch_game(): #LANCEMENT DU PROGRAMME PRINCIPALE
 						if can.coords(rect_list[k])[2] >= float(- nb_1 * C + xG2 + x0) and can.coords(rect_list[k])[3] >= float(- nb_2 * C + yG2 + y0) and can.coords(rect_list[k])[0] <= float(- nb_1 * C + xG2 + x0) and can.coords(rect_list[k])[1] <= float(- nb_2 * C + yG2 + y0) and player == 2:
 							check_contour += 1	#REGARDE SI LE RECTANGLE DU J2 EST PROCHE D'UN RECTANGLE DE LA MÊME COULEUR
 				nb_2 = 0
-		if placement_error == 0:
-			if player == 1 and nb_shot == 0 and abandon_j1 != 1:
-				if first_attempt == 2 and xG == 0 and yG == 0:					#VERIFIE SI J1 VEUT PLACER LE RECRANGLE EN HAUT A GAUCHE
-					rect_list.append(can.create_rectangle(xG + x0, yG + y0, nb_de1 * C + xG + x0, nb_de2 * C + yG + y0, fill = 'red'))
-					can.create_text(nb_de1 / 2 * C + xG, nb_de2 / 2 * C + yG, text = nb_de1 * nb_de2, anchor = CENTER, fill = 'white')
-					first_attempt -= 1
-				elif nb_de1 * C + xG + x0 > 0 and nb_de1 * C + xG + x0 <= NbC * C + x0 and nb_de2 * C + yG + y0 > 0 and nb_de2 * C + yG + y0 <= NbC * C + x0 and first_attempt == 0 and check_contour > 0:			#VERIFIE SI LE RECTANGLE DE J1 NE SORT PAS DE LA GRILLE
-					rect_list.append(can.create_rectangle(xG + x0, yG + y0, nb_de1 * C + xG + x0, nb_de2 * C + yG + y0, fill = 'red'))
-					can.create_text(nb_de1 / 2 * C + xG, nb_de2 / 2 * C + yG, text = nb_de1 * nb_de2, anchor = CENTER, fill = 'white')
-				else:
-					create_rectangle()
+		if first_attempt < 2 and xG == 0 and yG == 0 and player == 1 or first_attempt < 2 and xG2 == NbC * C and yG2 == NbC * C and player == 2:
+			check_contour += 1 #VERIFIE SI LE PREMIER COUP ET A UNE EXTREMITE
+		if nb_de1 * C + xG + x0 < 0 or nb_de1 * C + xG + x0 > NbC * C + x0 or nb_de2 * C + yG + y0 < 0 or nb_de2 * C + yG + y0 > NbC * C + x0:
+			if player == 1:
+				placement_error += 1 #VERIFIE SI LE RECTANGLE DE J1 NE SORT PAS DE LA GRILLE
+		if -nb_de1 * C + xG2 + x0 < 0 or -nb_de1 * C + xG2 + x0 > NbC * C + x0 or -nb_de2 * C + yG2 + y0 < 0 or -nb_de2 * C + yG2 + y0 > NbC * C + x0:
+			if player == 2:
+				placement_error += 1 #VERIFIE SI LE RECTANGLE DE J2 NE SORT PAS DE LA GRILLE
+		if placement_error == 0 and nb_shot == 0:
+			if player == 1 and abandon_j1 != 1 and first_attempt == 1 or player == 1 and abandon_j1 != 1 and check_contour > 0:
+				#Vérifie si aucune erreur est detecté et place le rectangle
+				rect_list.append(can.create_rectangle(xG + x0, yG + y0, nb_de1 * C + xG + x0, nb_de2 * C + yG + y0, fill = 'red'))
+				can.create_text(nb_de1 / 2 * C + xG, nb_de2 / 2 * C + yG, text = nb_de1 * nb_de2, anchor = CENTER, fill = 'white')
+				if first_attempt != 0:
+					first_attempt += 1
 				if abandon_j2 != 1:
 					player += 1
-			elif player == 2 and nb_shot == 0 and abandon_j2 != 1:
-				if first_attempt == 1 and xG2 == NbC * C and yG2 == NbC * C:	#VERIFIE SI J1 VEUT PLACER LE RECRANGLE EN HAUT A GAUCHE
-					rect_list.append(can.create_rectangle(xG2 + x0, yG2 + y0, - nb_de1 * C + xG2 + x0, - nb_de2 * C + yG2 + y0, fill = 'blue'))
-					can.create_text(- nb_de1 / 2 * C + xG2, - nb_de2 / 2 * C + yG2, text = nb_de1 * nb_de2, anchor = CENTER, fill = 'white')
-					first_attempt = first_attempt - 1
-				elif -nb_de1 * C + xG2 + x0 > 0 and -nb_de1 * C + xG2 + x0 <= NbC * C + x0 and -nb_de2 * C + yG2 + y0 > 0 and -nb_de2 * C + yG2 + y0 <= NbC * C + x0 and first_attempt == 0 and check_contour > 0:	#VERIFIE SI LE RECTANGLE DE J2 NE SORT PAS DE LA GRILLE
-					rect_list.append(can.create_rectangle(xG2 + x0, yG2 + y0, - nb_de1 * C + xG2 + x0, - nb_de2 * C + yG2 + y0, fill = 'blue'))
-					can.create_text(- nb_de1 / 2 * C + xG2, - nb_de2 / 2 * C + yG2, text = nb_de1 * nb_de2, anchor = CENTER, fill = 'white')
-				else:
-					create_rectangle()
+			elif player == 2 and abandon_j2 != 1 and first_attempt == 1 or player == 2 and abandon_j2 != 1 and check_contour > 0:
+				#Vérifie si aucune erreur est detecté et place le rectangle
+				rect_list.append(can.create_rectangle(xG2 + x0, yG2 + y0, - nb_de1 * C + xG2 + x0, - nb_de2 * C + yG2 + y0, fill = 'blue'))
+				can.create_text(- nb_de1 / 2 * C + xG2, - nb_de2 / 2 * C + yG2, text = nb_de1 * nb_de2, anchor = CENTER, fill = 'white')
+				if first_attempt != 0:
+					first_attempt += 1
 				if abandon_j1 != 1:
 					player -= 1
+			else:
+				create_rectangle()
 			nb_shot += 1
 			state_launch = NORMAL
 			button()
 			score()
+
+	def check_error_rectangle():
+		None
 
 	def give_up(): #FONCTION QUI PERMET D'ABANDONNER
 		global abandon_j1, abandon_j2, player, state_launch
@@ -182,13 +186,10 @@ def launch_game(): #LANCEMENT DU PROGRAMME PRINCIPALE
 		if abandon_j1 == 1 and abandon_j2 == 1:
 			if scorej1 > scorej2:
 					bn= messagebox.askquestion("Resultats", ("Le joueur 1 a gagné !\nVoulez vous rejouer ?"))
-					print(bn)
 			elif scorej1 < scorej2:
 					bn= messagebox.askquestion("Resultats", ("Le joueur 2 a gagné !\nVoulez vous rejouer ?"))
-					print(bn)
 			elif scorej1 == scorej2:
 					bn= messagebox.askquestion("Resultats", ("Egalité ! Personne n'a gagné\nVoulez vous rejouer ?"))
-					print(bn)
 			if bn == "no":
 					menu.destroy()
 					can.destroy()
@@ -202,9 +203,9 @@ def launch_game(): #LANCEMENT DU PROGRAMME PRINCIPALE
 		return player
 
 	def return_rectangle(evt): #FONCTION POUR RETOURNER LE RECTANGLE
-		global nb_de1, nb_de2, id1
+		global nb_de1, nb_de2
 		nb_de1, nb_de2 = nb_de2, nb_de1
-		mvt_rect(evt)
+		root.event_generate('<Motion>')
 
 	def button(): #BUTTON POUR LANCER LES DES
 		roll_button = Button(menu, state = state_launch, text = "Lancer dés")
@@ -213,15 +214,15 @@ def launch_game(): #LANCEMENT DU PROGRAMME PRINCIPALE
 
 	def mvt_rect(evt): #FONCTION QUI CREE UN RECTANGLE SOUS LE CURSEUR DE LA SOURIS
 		reduc = 5
-		for i in range(len(id2)):
-			can.delete(id2[i])
+		for i in range(len(moving_rect)):
+			can.delete(moving_rect[i])
 		if player == 1 and state_launch == DISABLED:
-			id2.append(can.create_rectangle(evt.x - reduc, evt.y - reduc, nb_de1 * C + evt.x + x0 - reduc, nb_de2 * C + evt.y + y0 - reduc, fill = 'red'))
+			moving_rect.append(can.create_rectangle(evt.x - reduc, evt.y - reduc, nb_de1 * C + evt.x + x0 - reduc, nb_de2 * C + evt.y + y0 - reduc, fill = 'red'))
 		if player == 2 and state_launch == DISABLED:
-			id2.append(can.create_rectangle(evt.x + reduc, evt.y + reduc, - nb_de1 * C + evt.x + x0 + reduc, - nb_de2 * C + evt.y + y0 + reduc, fill = 'blue'))
+			moving_rect.append(can.create_rectangle(evt.x + reduc, evt.y + reduc, - nb_de1 * C + evt.x + x0 + reduc, - nb_de2 * C + evt.y + y0 + reduc, fill = 'blue'))
 
 	def score(): #FONCTION QUI AFFICHE LES SCORES
-		global score_joueur1, score_joueur2, nb_de1, nb_de2, player, scorej1,scorej2
+		global score_joueur1, score_joueur2, nb_de1, nb_de2, player, scorej1, scorej2
 		if player == 2 and abandon_j1 == 0 or abandon_j2 == 2:
 			scorej1 += nb_de1*nb_de2
 			menu.delete(score_joueur1)
@@ -234,29 +235,24 @@ def launch_game(): #LANCEMENT DU PROGRAMME PRINCIPALE
 			menu.itemconfigure(score_joueur2, text=str(scorej2))
 
 	def reinitial(): #FONCTION QUI SERT A METTRE LES VARIABLES A LEUR ETAT INITIALE
-			global NbC, C, x0,y0,remove_dice,dots,id1,id2,rect_list,nb_de1,nb_de2,xi,yi,player,state_launch,nb_shot,abandon_j1,abandon_j2,first_attempt,compt_red,compt_blue,score_joueur1,score_joueur2,scorej1,scorej2
-			NbC = 20
-			C = 40
-			x0, y0 = 2, 2
-			remove_dice = 0
-			dots = []
-			id1 = []
-			id2 = []
-			rect_list = []
-			nb_de1, nb_de2 = 0, 0
-			xi, yi = 25, 25
-			player = 1
-			state_launch = NORMAL
-			nb_shot = 0
-			abandon_j1 = 0
-			abandon_j2 = 0
-			first_attempt = 2
-			compt_red, compt_blue = [], []
-			score_joueur1=0
-			score_joueur2=0
-			scorej1=0
-			scorej2=0
-			launch_game()
+		global remove_dice, dots, moving_rect, rect_list, player, nb_de1, nb_de2, abandon_j1, abandon_j2, first_attempt, compt_red, compt_blue, score_joueur1, score_joueur2, scorej1, scorej2
+		remove_dice = 0
+		dots = []
+		moving_rect = []
+		rect_list = []
+		nb_de1, nb_de2 = 0, 0
+		player = 1
+		state_launch = NORMAL
+		nb_shot = 0
+		abandon_j1 = 0
+		abandon_j2 = 0
+		first_attempt = 0
+		compt_red, compt_blue = [], []
+		score_joueur1 = 0
+		score_joueur2 = 0
+		scorej1 = 0
+		scorej2 = 0
+		launch_game()
 
 	give_up_button = Button(menu, text = "Abandonner")
 	give_up_button_win = menu.create_window((NbC * C + x0) / 4.9, 750, anchor = 'center', height = 50, width = 150*1, window = give_up_button)

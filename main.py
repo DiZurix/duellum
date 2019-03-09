@@ -20,6 +20,8 @@ score_joueur1 = 0					#??
 score_joueur2 = 0					#??
 scorej1 = 0							#??
 scorej2 = 0							#??
+placement_error = 0
+check_contour = 0
 
 root = Tk()
 root.title("Duellum")
@@ -108,43 +110,10 @@ def launch_game(): #LANCEMENT DU PROGRAMME PRINCIPALE
 		return nb_de1, nb_de2
 
 	def create_rect(evt): #FONCTION POUR CREER LES RECTANGLES
-		global player, state_launch, nb_shot, first_attempt, compt_red, compt_blue
+		global player, state_launch, nb_shot, first_attempt, compt_red, compt_blue, check_contour, placement_error
 		xG, yG = evt.x // C * C, evt.y // C * C
 		xG2, yG2 = (evt.x + C) // C * C, (evt.y + C) // C * C
-		placement_error = 0
-		check_contour = 0
-		for i in range(len(rect_list)):
-			if can.itemcget((rect_list[i]), 'fill') == 'red':
-				if compt_red.count(i) == 0:
-					compt_red.append(i)
-			elif can.itemcget((rect_list[i]), 'fill') == 'blue':
-				if compt_blue.count(i) == 0:
-					compt_blue.append(i)
-			for nb_1 in range(nb_de1 + 1):
-				for nb_2 in range(nb_de2 + 1):
-					print(nb_2)
-					if placement_error > 0:
-						break
-					if can.coords(rect_list[i])[2] > float(nb_1 * C + xG + x0) and can.coords(rect_list[i])[3] > float(nb_2 * C + yG + y0) and can.coords(rect_list[i])[0] < float(nb_1 * C + xG + x0) and can.coords(rect_list[i])[1] < float(nb_2 * C + yG + y0) and player == 1:
-						placement_error += 1	#REGARDE SI LE RECTANGLE DU J1 N'EST PAS EN COLLISION AVEC LES AUTRES
-					if can.coords(rect_list[i])[2] > float(- nb_1 * C + xG2 + x0) and can.coords(rect_list[i])[3] > float(- nb_2 * C + yG2 + y0) and can.coords(rect_list[i])[0] < float(- nb_1 * C + xG2 + x0) and can.coords(rect_list[i])[1] < float(- nb_2 * C + yG2 + y0) and player == 2:
-						placement_error += 1	#REGARDE SI LE RECTANGLE DU J2 N'EST PAS EN COLLISION AVEC LES AUTRES
-					if can.coords(rect_list[i])[2] > float(xG + x0) and can.coords(rect_list[i])[3] > float(yG + x0) and can.coords(rect_list[i])[0] < float(xG + x0) and can.coords(rect_list[i])[1] < float(yG + x0) and player == 1:
-						placement_error += 1	#REGARDE SI LE CLIQUE DU J1 N'EST PAS EN COLLISION AVEC LES RECTANGLES
-					if can.coords(rect_list[i])[2] > float(xG + C + x0) and can.coords(rect_list[i])[3] > float(yG + C + x0) and can.coords(rect_list[i])[0] < float(xG + C + x0) and can.coords(rect_list[i])[1] < float(yG + C + x0) and player == 2:
-						placement_error += 1	#REGARDE SI LE CLIQUE DU J2 N'EST PAS EN COLLISION AVEC LES RECRANGLE
-					for k in compt_red:
-						if can.coords(rect_list[k])[2] >= float(nb_1 * C + xG + x0) and can.coords(rect_list[k])[3] >= float(nb_2 * C + yG + y0) and can.coords(rect_list[k])[0] <= float(nb_1 * C + xG + x0) and can.coords(rect_list[k])[1] <= float(nb_2 * C + yG + y0) and player == 1:
-							check_contour += 1	#REGARDE SI LE RECTANGLE DU J1 EST PROCHE D'UN RECTANGLE DE LA MÊME COULEUR
-					for k in compt_blue:
-						if can.coords(rect_list[k])[2] >= float(- nb_1 * C + xG2 + x0) and can.coords(rect_list[k])[3] >= float(- nb_2 * C + yG2 + y0) and can.coords(rect_list[k])[0] <= float(- nb_1 * C + xG2 + x0) and can.coords(rect_list[k])[1] <= float(- nb_2 * C + yG2 + y0) and player == 2:
-							check_contour += 1	#REGARDE SI LE RECTANGLE DU J2 EST PROCHE D'UN RECTANGLE DE LA MÊME COULEUR
-				nb_2 = 0
-		if first_attempt < 2 and xG == 0 and yG == 0 and player == 1 or first_attempt < 2 and xG2 == NbC * C and yG2 == NbC * C and player == 2:
-			check_contour += 1 #VERIFIE SI LE PREMIER COUP ET A UNE EXTREMITE
-		if nb_de1 * C + xG + x0 < 0 or nb_de1 * C + xG + x0 > NbC * C + x0 or nb_de2 * C + yG + y0 < 0 or nb_de2 * C + yG + y0 > NbC * C + x0:
-			if player == 1:
-				placement_error += 1 #VERIFIE SI LE RECTANGLE DE J1 NE SORT PAS DE LA GRILLE
+		check_error_rect(xG, yG, xG2, yG2)
 		if -nb_de1 * C + xG2 + x0 < 0 or -nb_de1 * C + xG2 + x0 > NbC * C + x0 or -nb_de2 * C + yG2 + y0 < 0 or -nb_de2 * C + yG2 + y0 > NbC * C + x0:
 			if player == 2:
 				placement_error += 1 #VERIFIE SI LE RECTANGLE DE J2 NE SORT PAS DE LA GRILLE
@@ -171,9 +140,43 @@ def launch_game(): #LANCEMENT DU PROGRAMME PRINCIPALE
 			state_launch = NORMAL
 			button()
 			score()
-
-	def check_error_rectangle():
-		None
+			
+	def check_error_rect(xG, yG, xG2, yG2):
+		global player, state_launch, nb_shot, first_attempt, compt_red, compt_blue, check_contour, placement_error
+		placement_error = 0
+		check_contour = 0
+		for i in range(len(rect_list)):
+			if can.itemcget((rect_list[i]), 'fill') == 'red':
+				if compt_red.count(i) == 0:
+					compt_red.append(i)
+			elif can.itemcget((rect_list[i]), 'fill') == 'blue':
+				if compt_blue.count(i) == 0:
+					compt_blue.append(i)
+			for nb_1 in range(nb_de1 + 1):
+				for nb_2 in range(nb_de2 + 1):
+					if placement_error > 0:
+						break
+					if can.coords(rect_list[i])[2] > float(nb_1 * C + xG + x0) and can.coords(rect_list[i])[3] > float(nb_2 * C + yG + y0) and can.coords(rect_list[i])[0] < float(nb_1 * C + xG + x0) and can.coords(rect_list[i])[1] < float(nb_2 * C + yG + y0) and player == 1:
+						placement_error += 1	#REGARDE SI LE RECTANGLE DU J1 N'EST PAS EN COLLISION AVEC LES AUTRES
+					if can.coords(rect_list[i])[2] > float(- nb_1 * C + xG2 + x0) and can.coords(rect_list[i])[3] > float(- nb_2 * C + yG2 + y0) and can.coords(rect_list[i])[0] < float(- nb_1 * C + xG2 + x0) and can.coords(rect_list[i])[1] < float(- nb_2 * C + yG2 + y0) and player == 2:
+						placement_error += 1	#REGARDE SI LE RECTANGLE DU J2 N'EST PAS EN COLLISION AVEC LES AUTRES
+					if can.coords(rect_list[i])[2] > float(xG + x0) and can.coords(rect_list[i])[3] > float(yG + x0) and can.coords(rect_list[i])[0] < float(xG + x0) and can.coords(rect_list[i])[1] < float(yG + x0) and player == 1:
+						placement_error += 1	#REGARDE SI LE CLIQUE DU J1 N'EST PAS EN COLLISION AVEC LES RECTANGLES
+					if can.coords(rect_list[i])[2] > float(xG + C + x0) and can.coords(rect_list[i])[3] > float(yG + C + x0) and can.coords(rect_list[i])[0] < float(xG + C + x0) and can.coords(rect_list[i])[1] < float(yG + C + x0) and player == 2:
+						placement_error += 1	#REGARDE SI LE CLIQUE DU J2 N'EST PAS EN COLLISION AVEC LES RECRANGLE
+					for k in compt_red:
+						if can.coords(rect_list[k])[2] >= float(nb_1 * C + xG + x0) and can.coords(rect_list[k])[3] >= float(nb_2 * C + yG + y0) and can.coords(rect_list[k])[0] <= float(nb_1 * C + xG + x0) and can.coords(rect_list[k])[1] <= float(nb_2 * C + yG + y0) and player == 1:
+							check_contour += 1	#REGARDE SI LE RECTANGLE DU J1 EST PROCHE D'UN RECTANGLE DE LA MÊME COULEUR
+					for k in compt_blue:
+						if can.coords(rect_list[k])[2] >= float(- nb_1 * C + xG2 + x0) and can.coords(rect_list[k])[3] >= float(- nb_2 * C + yG2 + y0) and can.coords(rect_list[k])[0] <= float(- nb_1 * C + xG2 + x0) and can.coords(rect_list[k])[1] <= float(- nb_2 * C + yG2 + y0) and player == 2:
+							check_contour += 1	#REGARDE SI LE RECTANGLE DU J2 EST PROCHE D'UN RECTANGLE DE LA MÊME COULEUR
+				nb_2 = 0
+		if first_attempt < 2 and xG == 0 and yG == 0 and player == 1 or first_attempt < 2 and xG2 == NbC * C and yG2 == NbC * C and player == 2:
+			check_contour += 1 #VERIFIE SI LE PREMIER COUP ET A UNE EXTREMITE
+		if nb_de1 * C + xG + x0 < 0 or nb_de1 * C + xG + x0 > NbC * C + x0 or nb_de2 * C + yG + y0 < 0 or nb_de2 * C + yG + y0 > NbC * C + x0:
+			if player == 1:
+				placement_error += 1 #VERIFIE SI LE RECTANGLE DE J1 NE SORT PAS DE LA GRILLE
+		return check_contour, placement_error
 
 	def give_up(): #FONCTION QUI PERMET D'ABANDONNER
 		global abandon_j1, abandon_j2, player, state_launch
@@ -235,13 +238,13 @@ def launch_game(): #LANCEMENT DU PROGRAMME PRINCIPALE
 			menu.itemconfigure(score_joueur2, text = str(scorej2))
 
 	def reinitial(): #FONCTION QUI SERT A METTRE LES VARIABLES A LEUR ETAT INITIALE
-		global remove_dice, dots, moving_rect, rect_list, player, nb_de1, nb_de2, abandon_j1, abandon_j2, first_attempt, compt_red, compt_blue, score_joueur1, score_joueur2, scorej1, scorej2
+		global remove_dice, dots, moving_rect, rect_list, player, nb_de1, nb_de2, state_launch, nb_shot, abandon_j1, abandon_j2, first_attempt, compt_red, compt_blue, score_joueur1, score_joueur2, scorej1, scorej2
 		remove_dice = 0
 		dots = []
 		moving_rect = []
 		rect_list = []
-		nb_de1, nb_de2 = 0, 0
 		player = 1
+		nb_de1, nb_de2 = 0, 0
 		state_launch = NORMAL
 		nb_shot = 0
 		abandon_j1 = 0

@@ -16,12 +16,12 @@ nb_shot = 0							#Variable qui permet de savoir si le joueur a déjà joué ou 
 abandon_j1, abandon_j2 = 0, 0		#Variable qui permet de savoir si J1/J2 a abandonné ou non
 first_attempt = 0					#Variable qui détermine les 2 premiers coups de la partie
 compt_red, compt_blue = [], []		#Liste qui contient les rectangles rouges/bleus
+placement_error = 0					#Variable qui comptabilise les erreurs de collisions
+check_contour = 0					#Variable qui vérifie si les rectangles sont collés
 score_joueur1 = 0					#??
 score_joueur2 = 0					#??
 scorej1 = 0							#??
 scorej2 = 0							#??
-placement_error = 0
-check_contour = 0
 
 root = Tk()
 root.title("Duellum")
@@ -109,14 +109,8 @@ def launch_game(): #LANCEMENT DU PROGRAMME PRINCIPALE
 		nb_shot = 0
 		return nb_de1, nb_de2
 
-	def create_rect(evt): #FONCTION POUR CREER LES RECTANGLES
-		global player, state_launch, nb_shot, first_attempt, compt_red, compt_blue, check_contour, placement_error
-		xG, yG = evt.x // C * C, evt.y // C * C
-		xG2, yG2 = (evt.x + C) // C * C, (evt.y + C) // C * C
-		check_error_rect(xG, yG, xG2, yG2)
-		if -nb_de1 * C + xG2 + x0 < 0 or -nb_de1 * C + xG2 + x0 > NbC * C + x0 or -nb_de2 * C + yG2 + y0 < 0 or -nb_de2 * C + yG2 + y0 > NbC * C + x0:
-			if player == 2:
-				placement_error += 1 #VERIFIE SI LE RECTANGLE DE J2 NE SORT PAS DE LA GRILLE
+	def create_rect(xG, yG, xG2, yG2): #FONCTION POUR CREER LES RECTANGLES
+		global player, state_launch, nb_shot, first_attempt
 		if placement_error == 0 and nb_shot == 0:
 			if player == 1 and abandon_j1 != 1 and first_attempt == 1 or player == 1 and abandon_j1 != 1 and check_contour > 0:
 				#Vérifie si aucune erreur est detecté et place le rectangle
@@ -134,15 +128,15 @@ def launch_game(): #LANCEMENT DU PROGRAMME PRINCIPALE
 					first_attempt += 1
 				if abandon_j1 != 1:
 					player -= 1
-			else:
-				create_rect(evt)
 			nb_shot += 1
 			state_launch = NORMAL
 			button()
 			score()
-			
-	def check_error_rect(xG, yG, xG2, yG2):
-		global player, state_launch, nb_shot, first_attempt, compt_red, compt_blue, check_contour, placement_error
+
+	def check_error_rect(evt): #FONCTION QUI VERIFIE SI LE RECTANGLE PEUT-ÊTRE PLACÉ
+		global check_contour
+		xG, yG = evt.x // C * C, evt.y // C * C
+		xG2, yG2 = (evt.x + C) // C * C, (evt.y + C) // C * C
 		placement_error = 0
 		check_contour = 0
 		for i in range(len(rect_list)):
@@ -160,10 +154,6 @@ def launch_game(): #LANCEMENT DU PROGRAMME PRINCIPALE
 						placement_error += 1	#REGARDE SI LE RECTANGLE DU J1 N'EST PAS EN COLLISION AVEC LES AUTRES
 					if can.coords(rect_list[i])[2] > float(- nb_1 * C + xG2 + x0) and can.coords(rect_list[i])[3] > float(- nb_2 * C + yG2 + y0) and can.coords(rect_list[i])[0] < float(- nb_1 * C + xG2 + x0) and can.coords(rect_list[i])[1] < float(- nb_2 * C + yG2 + y0) and player == 2:
 						placement_error += 1	#REGARDE SI LE RECTANGLE DU J2 N'EST PAS EN COLLISION AVEC LES AUTRES
-					if can.coords(rect_list[i])[2] > float(xG + x0) and can.coords(rect_list[i])[3] > float(yG + x0) and can.coords(rect_list[i])[0] < float(xG + x0) and can.coords(rect_list[i])[1] < float(yG + x0) and player == 1:
-						placement_error += 1	#REGARDE SI LE CLIQUE DU J1 N'EST PAS EN COLLISION AVEC LES RECTANGLES
-					if can.coords(rect_list[i])[2] > float(xG + C + x0) and can.coords(rect_list[i])[3] > float(yG + C + x0) and can.coords(rect_list[i])[0] < float(xG + C + x0) and can.coords(rect_list[i])[1] < float(yG + C + x0) and player == 2:
-						placement_error += 1	#REGARDE SI LE CLIQUE DU J2 N'EST PAS EN COLLISION AVEC LES RECRANGLE
 					for k in compt_red:
 						if can.coords(rect_list[k])[2] >= float(nb_1 * C + xG + x0) and can.coords(rect_list[k])[3] >= float(nb_2 * C + yG + y0) and can.coords(rect_list[k])[0] <= float(nb_1 * C + xG + x0) and can.coords(rect_list[k])[1] <= float(nb_2 * C + yG + y0) and player == 1:
 							check_contour += 1	#REGARDE SI LE RECTANGLE DU J1 EST PROCHE D'UN RECTANGLE DE LA MÊME COULEUR
@@ -173,9 +163,14 @@ def launch_game(): #LANCEMENT DU PROGRAMME PRINCIPALE
 				nb_2 = 0
 		if first_attempt < 2 and xG == 0 and yG == 0 and player == 1 or first_attempt < 2 and xG2 == NbC * C and yG2 == NbC * C and player == 2:
 			check_contour += 1 #VERIFIE SI LE PREMIER COUP ET A UNE EXTREMITE
-		if nb_de1 * C + xG + x0 < 0 or nb_de1 * C + xG + x0 > NbC * C + x0 or nb_de2 * C + yG + y0 < 0 or nb_de2 * C + yG + y0 > NbC * C + x0:
+		if nb_de1 * C + xG + x0 < 0 or nb_de1 * C + xG + x0 > NbC * C + x0 or nb_de2 * C + yG + y0 < 0 or nb_de2 * C + yG + y0 > NbC * C + y0:
 			if player == 1:
 				placement_error += 1 #VERIFIE SI LE RECTANGLE DE J1 NE SORT PAS DE LA GRILLE
+		if -nb_de1 * C + xG2 + x0 < 0 or -nb_de1 * C + xG2 + x0 > NbC * C + x0 or -nb_de2 * C + yG2 + y0 < 0 or -nb_de2 * C + yG2 + y0 > NbC * C + y0:
+			if player == 2:
+				placement_error += 1 #VERIFIE SI LE RECTANGLE DE J2 NE SORT PAS DE LA GRILLE
+		if placement_error == 0 and check_contour > 0 and nb_de1 > 0 and nb_de2 > 0:
+			create_rect(xG, yG, xG2, yG2)
 		return check_contour, placement_error
 
 	def give_up(): #FONCTION QUI PERMET D'ABANDONNER
@@ -238,19 +233,20 @@ def launch_game(): #LANCEMENT DU PROGRAMME PRINCIPALE
 			menu.itemconfigure(score_joueur2, text = str(scorej2))
 
 	def reinitial(): #FONCTION QUI SERT A METTRE LES VARIABLES A LEUR ETAT INITIALE
-		global remove_dice, dots, moving_rect, rect_list, player, nb_de1, nb_de2, state_launch, nb_shot, abandon_j1, abandon_j2, first_attempt, compt_red, compt_blue, score_joueur1, score_joueur2, scorej1, scorej2
+		global remove_dice, dots, moving_rect, rect_list, player, nb_de1, nb_de2, state_launch, nb_shot, abandon_j1, abandon_j2, first_attempt, compt_red, compt_blue, placement_error, check_contour, score_joueur1, score_joueur2, scorej1, scorej2
 		remove_dice = 0
 		dots = []
 		moving_rect = []
 		rect_list = []
-		player = 1
 		nb_de1, nb_de2 = 0, 0
+		player = 1
 		state_launch = NORMAL
 		nb_shot = 0
-		abandon_j1 = 0
-		abandon_j2 = 0
+		abandon_j1, abandon_j2 = 0, 0
 		first_attempt = 0
 		compt_red, compt_blue = [], []
+		placement_error = 0
+		check_contour = 0
 		score_joueur1 = 0
 		score_joueur2 = 0
 		scorej1 = 0
@@ -263,11 +259,14 @@ def launch_game(): #LANCEMENT DU PROGRAMME PRINCIPALE
 
 	score_separation = menu.create_text((NbC * C + x0) / 5.0, 575, text="-", font = ("Courier",35),fill = 'black')
 
+	def pointeur(event):
+		print("Clic détecté en X =" + str(event.x) + ", Y =" + str(event.y))
+	can.bind('<Button-2>', pointeur)
 	create_grille()
 	button()
 
 	can.event_add('<<panic>>', '<Motion>', '<ButtonRelease>')
-	can.bind('<Button-1>', create_rect)
+	can.bind('<Button-1>', check_error_rect)
 	can.bind('<Button-3>', return_rectangle)
 	can.bind('<<panic>>', mvt_rect)
 

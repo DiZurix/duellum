@@ -19,6 +19,8 @@ text_quitter = PhotoImage(file='images/text_quitter.gif')
 #text_quitter = text_quitter.zoom(int(C/64))
 text_copyright = PhotoImage(file='images/text_copyright.gif')
 #text_copyright = text_copyright.zoom(int(C/64))
+text_retour = PhotoImage(file='images/text_retour.gif')
+#text_retour = text_retour.zoom(int(C/64))
 color_background = 'gainsboro'
 
 def menu():
@@ -55,8 +57,8 @@ def tutorial():
 		win.destroy()
 		menu()
 
-	b_close = Button(win, image = text_quitter)
-	b_close_window = win.create_window(M, H/1.75 + (H/1.75 - H/2.75), anchor = 'center', width = 200*C, window = b_close)
+	b_close = Button(win, image = text_retour)
+	b_close_window = win.create_window(M, H/1.75 + (H/1.75 - H/2.75), anchor = 'center', width = 200, window = b_close)
 	b_close.configure(bg = color_background, pady = 30, relief = FLAT, command = lambda : close_tutorial(root))
 	texte_copyright_img = win.create_image(W+225, H-20, image = text_copyright, anchor = 'center')
 

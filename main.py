@@ -22,9 +22,9 @@ score_joueur1 = 0					#??
 score_joueur2 = 0					#??
 scorej1 = 0							#??
 scorej2 = 0							#??
-wrong_size_1 = []
-wrong_size_2 = []
-counter_check = 0
+rect_larg_1 = []					#Liste qui contient les rectangles de largeur 1
+rect_long_1 = []					#Liste qui contient les rectangles de longueur 1
+counter_check = 0					#Variable qui vérifie si le rectangle touche un autre de la même couleur
 
 root = Tk()
 root.title("Duellum")
@@ -144,9 +144,9 @@ def launch_game(): #LANCEMENT DU PROGRAMME PRINCIPALE
 		check_contour = 0
 		for i in range(len(rect_list)):
 			if can.coords(rect_list[i])[0] + C == can.coords(rect_list[i])[2]:
-				wrong_size_1.append(i)
+				rect_larg_1.append(i)
 			if can.coords(rect_list[i])[1] + C == can.coords(rect_list[i])[3]:
-				wrong_size_2.append(i)
+				rect_long_1.append(i)
 			if can.itemcget((rect_list[i]), 'fill') == 'red':
 				if compt_red.count(i) == 0:
 					compt_red.append(i)
@@ -157,7 +157,7 @@ def launch_game(): #LANCEMENT DU PROGRAMME PRINCIPALE
 				for nb_2 in range(nb_de2 + 1):
 					if placement_error > 0:
 						break
-					if wrong_size_1.count(i) > 0:
+					if rect_larg_1.count(i) > 0:
 						if player == 1:#CHECK ERROR CUBE AVEC NB_1 = 1 J1 (VERTICAL)
 							if can.coords(rect_list[i])[2] + C > float(nb_1 * C + xG + x0) and can.coords(rect_list[i])[3] > float(nb_2 * C + yG + y0) and can.coords(rect_list[i])[0] < float(nb_1 * C + xG + x0) and can.coords(rect_list[i])[1] < float(nb_2 * C + yG + y0):
 								if xG + x0 < can.coords(rect_list[i])[0] + C:
@@ -168,7 +168,7 @@ def launch_game(): #LANCEMENT DU PROGRAMME PRINCIPALE
 								if xG2 + x0 < can.coords(rect_list[i])[0] + C*2:
 									print('ERROR (1)')
 									placement_error += 1
-					if wrong_size_2.count(i) > 0:
+					if rect_long_1.count(i) > 0:
 						if player == 1: #CHECK ERROR CUBE AVEC NB_2 = 1 J1 (HORIZONTAL)
 							if can.coords(rect_list[i])[2] > float(nb_1 * C + xG + x0) and can.coords(rect_list[i])[3] + C > float(nb_2 * C + yG + y0) and can.coords(rect_list[i])[0] < float(nb_1 * C + xG + x0) and can.coords(rect_list[i])[1] < float(nb_2 * C + yG + y0):
 								if yG + y0 < can.coords(rect_list[i])[1] + C:

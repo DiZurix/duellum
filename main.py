@@ -157,22 +157,28 @@ def launch_game(): #LANCEMENT DU PROGRAMME PRINCIPALE
 				for nb_2 in range(nb_de2 + 1):
 					if placement_error > 0:
 						break
-					if wrong_size_1.count(i) > 0 and player == 1: #CHECK ERROR CUBE AVEC NB_1 = 1 J1 (VERTICAL)
-						if can.coords(rect_list[i])[2] + C > float(nb_1 * C + xG + x0) and can.coords(rect_list[i])[3] > float(nb_2 * C + yG + y0) and can.coords(rect_list[i])[0] < float(nb_1 * C + xG + x0) and can.coords(rect_list[i])[1] < float(nb_2 * C + yG + y0):
-							if xG + x0 < can.coords(rect_list[i])[0] + C:
-								placement_error += 1
-					if wrong_size_2.count(i) > 0 and player == 1: #CHECK ERROR CUBE AVEC NB_2 = 1 J1 (HORIZONTAL)
-						if can.coords(rect_list[i])[2] > float(nb_1 * C + xG + x0) and can.coords(rect_list[i])[3] + C > float(nb_2 * C + yG + y0) and can.coords(rect_list[i])[0] < float(nb_1 * C + xG + x0) and can.coords(rect_list[i])[1] < float(nb_2 * C + yG + y0):
-							if yG + y0 < can.coords(rect_list[i])[1] + C:
-								placement_error += 1
-					if wrong_size_1.count(i) > 0 and player == 2: #CHECK ERROR CUBE NB_1 = 1, J2 (VERTICAL)
-						if can.coords(rect_list[i])[2] + C > float(- nb_1 * C + xG2 + x0) and can.coords(rect_list[i])[3] > float(- nb_2 * C + yG2 + y0) and can.coords(rect_list[i])[0] < float(- nb_1 * C + xG2 + x0) and can.coords(rect_list[i])[1] < float(- nb_2 * C + yG2 + y0):
-							if xG + x0 < can.coords(rect_list[i])[0] + C:
-								placement_error += 1
-					if wrong_size_2.count(i) > 0 and player == 2: #CHECK ERROR CUBE AVEC NB_2 =1, J2 (HORIZONTAL)
-						if can.coords(rect_list[i])[2] > float(- nb_1 * C + xG2 + x0) and can.coords(rect_list[i])[3] + C > float(- nb_2 * C + yG2 + y0) and can.coords(rect_list[i])[0] < float(- nb_1 * C + xG2 + x0) and can.coords(rect_list[i])[1] < float(- nb_2 * C + yG2 + y0):
-							if yG + y0 < can.coords(rect_list[i])[1] + C:
-								placement_error += 1
+					if wrong_size_1.count(i) > 0:
+						if player == 1:#CHECK ERROR CUBE AVEC NB_1 = 1 J1 (VERTICAL)
+							if can.coords(rect_list[i])[2] + C > float(nb_1 * C + xG + x0) and can.coords(rect_list[i])[3] > float(nb_2 * C + yG + y0) and can.coords(rect_list[i])[0] < float(nb_1 * C + xG + x0) and can.coords(rect_list[i])[1] < float(nb_2 * C + yG + y0):
+								if xG + x0 < can.coords(rect_list[i])[0] + C:
+									placement_error += 1
+						if player == 2: #CHECK ERROR CUBE NB_1 = 1, J2 (VERTICAL)
+							if can.coords(rect_list[i])[2] + C > float(- nb_1 * C + xG2 + x0) and can.coords(rect_list[i])[3] > float(- nb_2 * C + yG2 + y0) and can.coords(rect_list[i])[0] < float(- nb_1 * C + xG2 + x0) and can.coords(rect_list[i])[1] < float(- nb_2 * C + yG2 + y0):
+								print('1er condition (1)')
+								if xG2 + x0 < can.coords(rect_list[i])[0] + C*2:
+									print('ERROR (1)')
+									placement_error += 1
+					if wrong_size_2.count(i) > 0:
+						if player == 1: #CHECK ERROR CUBE AVEC NB_2 = 1 J1 (HORIZONTAL)
+							if can.coords(rect_list[i])[2] > float(nb_1 * C + xG + x0) and can.coords(rect_list[i])[3] + C > float(nb_2 * C + yG + y0) and can.coords(rect_list[i])[0] < float(nb_1 * C + xG + x0) and can.coords(rect_list[i])[1] < float(nb_2 * C + yG + y0):
+								if yG + y0 < can.coords(rect_list[i])[1] + C:
+									placement_error += 1
+						if player == 2: #CHECK ERROR CUBE AVEC NB_2 =1, J2 (HORIZONTAL)
+							if can.coords(rect_list[i])[2] > float(- nb_1 * C + xG2 + x0) and can.coords(rect_list[i])[3] + C > float(- nb_2 * C + yG2 + y0) and can.coords(rect_list[i])[0] < float(- nb_1 * C + xG2 + x0) and can.coords(rect_list[i])[1] < float(- nb_2 * C + yG2 + y0):
+								print('1er condition (2)')
+								if yG2 + y0 < can.coords(rect_list[i])[1] + C*2:
+									print('ERROR (2)')
+									placement_error += 1
 					if can.coords(rect_list[i])[2] > float(nb_1 * C + xG + x0) and can.coords(rect_list[i])[3] > float(nb_2 * C + yG + y0) and can.coords(rect_list[i])[0] < float(nb_1 * C + xG + x0) and can.coords(rect_list[i])[1] < float(nb_2 * C + yG + y0) and player == 1:
 						placement_error += 1	#REGARDE SI LE RECTANGLE DU J1 N'EST PAS EN COLLISION AVEC LES AUTRES
 					if can.coords(rect_list[i])[2] > float(- nb_1 * C + xG2 + x0) and can.coords(rect_list[i])[3] > float(- nb_2 * C + yG2 + y0) and can.coords(rect_list[i])[0] < float(- nb_1 * C + xG2 + x0) and can.coords(rect_list[i])[1] < float(- nb_2 * C + yG2 + y0) and player == 2:
@@ -244,7 +250,7 @@ def launch_game(): #LANCEMENT DU PROGRAMME PRINCIPALE
 
 	def score(): #FONCTION QUI AFFICHE LES SCORES
 		global score_joueur1, score_joueur2, scorej1, scorej2
-		if player == 2 and abandon_j1 == 0 or abandon_j2 == 2:
+		if player == 2 and abandon_j1 == 0 or abandon_j2 == 1:
 			scorej1 += nb_de1 * nb_de2
 			menu.delete(score_joueur1)
 			score_joueur1 = menu.create_text((NbC * C + x0) / 8.4, 575, text = scorej1, font = ("Courier",35),fill = 'red')

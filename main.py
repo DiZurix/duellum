@@ -256,7 +256,7 @@ def launch_game(): #LANCEMENT DU PROGRAMME PRINCIPALE
 			scorej1 += nb_de1 * nb_de2
 			menu.delete(score_joueur1)
 			score_joueur1 = menu.create_text((NbC * C + x0) / 8.4, 575, text = scorej1, font = ("Courier",35),fill = color_j1)
-			menu.itemconfigure(score_joueur1, text=str(scorej1))
+			menu.itemconfigure(score_joueur1, text = str(scorej1))
 		if player == 1 and abandon_j2 == 0 or abandon_j1 == 1:
 			scorej2 += nb_de1 * nb_de2
 			menu.delete(score_joueur2)
@@ -280,4 +280,4 @@ def launch_game(): #LANCEMENT DU PROGRAMME PRINCIPALE
 
 	root.mainloop()
 
-launch_game()
+#launch_game()

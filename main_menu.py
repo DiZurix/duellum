@@ -43,9 +43,13 @@ def option():
     win.pack()
     win['bg'] = color_background
     
-    b_difficulty = Button(win, text="Difficulté")
+    b_difficulty = Button(win, text="DIFFICULTE")
     b_difficulty_window = win.create_window(M, H/2.90, anchor = 'center', width = 200, window = b_difficulty)
     b_difficulty.configure(bg = color_background, pady = 15, relief = FLAT, command = difficulty )
+
+    b_obstacles = Button(win,text="OBSTACLES")
+    b_obstacles_window = win.create_window(M,H/2.15, anchor = 'center', width= 200, window = b_obstacles)
+    b_obstacles.configure(bg = color_background, pady = 15, relief = FLAT, command = obstacles)
 
     def close_option(root):
         win.destroy()
@@ -84,6 +88,34 @@ def difficulty():
     b_close = Button(win, image = text_retour)
     b_close_window = win.create_window(M, H/1.75 + (H/1.75 - H/2.75), anchor = 'center', width = 200, window = b_close)
     b_close.configure(bg = color_background, pady = 30, relief = FLAT, command = lambda : close_difficulty(root))
+    texte_copyright_img = win.create_image(W+225, H-20, image = text_copyright, anchor = 'center')
+
+    root.mainloop()
+
+def obstacles():
+    global win
+    win.destroy()
+    win = Canvas (root, width = WC, height = H, highlightbackground = 'black', highlightcolor = 'black', cursor = 'circle', highlightthickness = 2, bd = 0)
+    win.pack()
+    win['bg'] = color_background
+
+    b_obstacles_oui = Button(win, text="ACTIVE")
+    b_obstacles_oui_window = win.create_window(M, H/2.90, anchor = 'center', width = 200, window = b_obstacles_oui)
+    b_obstacles_oui.configure(bg = color_background, pady = 15, relief = FLAT, command = lambda : None)
+    
+    b_obstacles_non = Button(win, text="DESACTIVE")
+    b_obstacles_non_window = win.create_window(M, H/2.15, anchor = 'center', width = 200, window = b_obstacles_non)
+    b_obstacles_non.configure(bg = color_background, pady = 15, relief = FLAT, command = lambda: None)
+
+
+    
+    def close_obstacles(root):
+        win.destroy()
+        option()
+
+    b_close = Button(win, image = text_retour)
+    b_close_window = win.create_window(M, H/1.75 + (H/1.75 - H/2.75), anchor = 'center', width = 200, window = b_close)
+    b_close.configure(bg = color_background, pady = 30, relief = FLAT, command = lambda : close_obstacles(root))
     texte_copyright_img = win.create_image(W+225, H-20, image = text_copyright, anchor = 'center')
 
     root.mainloop()

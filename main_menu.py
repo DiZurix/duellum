@@ -43,13 +43,17 @@ def option():
     win.pack()
     win['bg'] = color_background
     
-    b_difficulty = Button(win, text="DIFFICULTE")
-    b_difficulty_window = win.create_window(M, H/2.90, anchor = 'center', width = 200, window = b_difficulty)
-    b_difficulty.configure(bg = color_background, pady = 15, relief = FLAT, command = difficulty )
+    b_grille = Button(win, text="GRILLE")
+    b_grille_window = win.create_window(M, H/2.90, anchor = 'center', width = 200, window = b_grille)
+    b_grille.configure(bg = color_background, pady = 15, relief = FLAT, command = grille )
 
     b_obstacles = Button(win,text="OBSTACLES")
     b_obstacles_window = win.create_window(M,H/2.15, anchor = 'center', width= 200, window = b_obstacles)
     b_obstacles.configure(bg = color_background, pady = 15, relief = FLAT, command = obstacles)
+
+    b_dices = Button(win,text="DÉS")
+    b_dices_window = win.create_window(M,H/1.75, anchor = 'center', width= 200, window = b_dices)
+    b_dices.configure(bg = color_background, pady = 15, relief = FLAT, command = dices)
 
     def close_option(root):
         win.destroy()
@@ -62,32 +66,32 @@ def option():
 
     root.mainloop()
 
-def difficulty():
+def grille():
     global win
     win.destroy()
     win = Canvas (root, width = WC, height = H, highlightbackground = 'black', highlightcolor = 'black', cursor = 'circle', highlightthickness = 2, bd = 0)
     win.pack()
     win['bg'] = color_background
 
-    b_difficulty_e = Button(win, text="EASY")
-    b_difficulty_e_window = win.create_window(M, H/2.90, anchor = 'center', width = 200, window = b_difficulty_e)
-    b_difficulty_e.configure(bg = color_background, pady = 15, relief = FLAT, command = lambda : easy_level())
+    b_grille_e = Button(win, text="EASY")
+    b_grille_e_window = win.create_window(M, H/2.90, anchor = 'center', width = 200, window = b_grille_e)
+    b_grille_e.configure(bg = color_background, pady = 15, relief = FLAT, command = lambda : easy_level())
     
-    b_difficulty_n = Button(win, text="NORMAL")
-    b_difficulty_n_window = win.create_window(M, H/2.15, anchor = 'center', width = 200, window = b_difficulty_n)
-    b_difficulty_n.configure(bg = color_background, pady = 15, relief = FLAT, command = lambda: normal_level())
+    b_grille_n = Button(win, text="NORMAL")
+    b_grille_n_window = win.create_window(M, H/2.15, anchor = 'center', width = 200, window = b_grille_n)
+    b_grille_n.configure(bg = color_background, pady = 15, relief = FLAT, command = lambda: normal_level())
 
-    b_difficulty_h = Button(win, text="HARD")
-    b_difficulty_h_window = win.create_window(M, H/1.75, anchor = 'center', width = 200, window = b_difficulty_h)
-    b_difficulty_h.configure(bg = color_background, pady = 15, relief = FLAT, command = lambda : hard_level())
+    b_grille_h = Button(win, text="HARD")
+    b_grille_h_window = win.create_window(M, H/1.75, anchor = 'center', width = 200, window = b_grille_h)
+    b_grille_h.configure(bg = color_background, pady = 15, relief = FLAT, command = lambda : hard_level())
     
-    def close_difficulty(root):
+    def close_grille(root):
         win.destroy()
         option()
 
     b_close = Button(win, image = text_retour)
     b_close_window = win.create_window(M, H/1.75 + (H/1.75 - H/2.75), anchor = 'center', width = 200, window = b_close)
-    b_close.configure(bg = color_background, pady = 30, relief = FLAT, command = lambda : close_difficulty(root))
+    b_close.configure(bg = color_background, pady = 30, relief = FLAT, command = lambda : close_grille(root))
     texte_copyright_img = win.create_image(W+225, H-20, image = text_copyright, anchor = 'center')
 
     root.mainloop()
@@ -101,11 +105,11 @@ def obstacles():
 
     b_obstacles_oui = Button(win, text="ACTIVE")
     b_obstacles_oui_window = win.create_window(M, H/2.90, anchor = 'center', width = 200, window = b_obstacles_oui)
-    b_obstacles_oui.configure(bg = color_background, pady = 15, relief = FLAT, command = lambda : None)
+    b_obstacles_oui.configure(bg = color_background, pady = 15, relief = FLAT, command = lambda : activation_obstacle())
     
     b_obstacles_non = Button(win, text="DESACTIVE")
     b_obstacles_non_window = win.create_window(M, H/2.15, anchor = 'center', width = 200, window = b_obstacles_non)
-    b_obstacles_non.configure(bg = color_background, pady = 15, relief = FLAT, command = lambda: None)
+    b_obstacles_non.configure(bg = color_background, pady = 15, relief = FLAT, command = lambda: desactive_obstacle())
 
 
     
@@ -116,6 +120,38 @@ def obstacles():
     b_close = Button(win, image = text_retour)
     b_close_window = win.create_window(M, H/1.75 + (H/1.75 - H/2.75), anchor = 'center', width = 200, window = b_close)
     b_close.configure(bg = color_background, pady = 30, relief = FLAT, command = lambda : close_obstacles(root))
+    texte_copyright_img = win.create_image(W+225, H-20, image = text_copyright, anchor = 'center')
+
+    root.mainloop()
+
+def dices():
+    global win
+    win.destroy()
+    win = Canvas (root, width = WC, height = H, highlightbackground = 'black', highlightcolor = 'black', cursor = 'circle', highlightthickness = 2, bd = 0)
+    win.pack()
+    win['bg'] = color_background
+
+    b_dices_3 = Button(win, text="Dés à 3 faces")
+    b_dices_3_window = win.create_window(M, H/2.90, anchor = 'center', width = 200, window = b_dices_3)
+    b_dices_3.configure(bg = color_background, pady = 15, relief = FLAT, command = lambda : dice_3())
+    
+    b_dices_6 = Button(win, text="Dés à 6 faces")
+    b_dices_6_window = win.create_window(M, H/2.15, anchor = 'center', width = 200, window = b_dices_6)
+    b_dices_6.configure(bg = color_background, pady = 15, relief = FLAT, command = lambda: dice_6())
+
+    b_dices_9 = Button(win, text="Dés à 9 faces")
+    b_dices_9_window = win.create_window(M, H/1.75, anchor = 'center', width = 200, window = b_dices_9)
+    b_dices_9.configure(bg = color_background, pady = 15, relief = FLAT, command = lambda : dice_9())
+
+
+    
+    def close_dices(root):
+        win.destroy()
+        option()
+
+    b_close = Button(win, image = text_retour)
+    b_close_window = win.create_window(M, H/1.75 + (H/1.75 - H/2.75), anchor = 'center', width = 200, window = b_close)
+    b_close.configure(bg = color_background, pady = 30, relief = FLAT, command = lambda : close_dices(root))
     texte_copyright_img = win.create_image(W+225, H-20, image = text_copyright, anchor = 'center')
 
     root.mainloop()

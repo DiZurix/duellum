@@ -22,15 +22,20 @@ score_joueur2 = 0					#??
 scorej1 = 0							#??
 scorej2 = 0							#??
 check_list_map = []					#Liste qui contient la carte ou sont placés les rectangles
-color_j1 = 'red'
-color_j2 = 'blue'
-lets_go = 0
+color_j1 = 'red'					#Variable qui contient la couleur du joueur 1
+color_j2 = 'blue'					#Variable qui contient la couleur du joueur 2
+activate_obs = 0					#Variable qui indique si les obstacles doivent être placés
+range_dice = 6
 size_obs_compt = 1
-activate_obs = 1
 
 root = Tk()
 root.title("Duellum")
 root.resizable(False, False)
+
+empty_crown = PhotoImage(file='images/empty_crown.gif')
+red_crown = PhotoImage(file='images/red_crown.gif')
+blue_crown = PhotoImage(file='images/blue_crown.gif')
+
 
 def easy_level():
 	global NbC, C, size_obs_compt
@@ -57,6 +62,15 @@ def activation_obstacle():
 def desactive_obstacle():
 	global activate_obs
 	activate_obs = 0
+	
+def modif_dices(nb):
+	global range_dice
+	if nb == 3:
+		range_dice = 3
+	if nb == 6:
+		range_dice = 6
+	if nb == 9:
+		range_dice = 9
 
 def launch_game(): #LANCEMENT DU PROGRAMME PRINCIPALE
 	can = Canvas(root, bg = 'white', height = (NbC * C + x0), width = (NbC * C + y0))
@@ -64,16 +78,18 @@ def launch_game(): #LANCEMENT DU PROGRAMME PRINCIPALE
 	menu = Canvas(root, bg = 'white', height = (NbC * C + x0), width = 300)
 	menu.pack(side = RIGHT)
 
+	crown_img = menu.create_image(300/2, (NbC * C + x0) / 5, image = empty_crown, anchor='center')
+
 	def create_grille(): #FONCTION POUR CREER LA GRILLE
 		for i in range(NbC + 1):
 			can.create_line(x0 + C * i, y0, x0 + C * i, y0 + NbC * C, width = 1)
 			can.create_line(x0, y0 + C * i, x0 + NbC * C, y0 + C * i, width = 1)
 
 	def make_dice(): #FONCTION POUR CREER LES DES
-		global remove_dice, nb_de1, nb_de2, state_launch, nb_shot
-		nb_de1, nb_de2 = randint(1, 6), randint(1, 6)
-		x1, x2 = (NbC * C) / 5 - 45, (NbC * C) / 5 + 15
-		y, r = 325, 10
+		global remove_dice, nb_de1, nb_de2, state_launch, nb_shot, range_dice
+		nb_de1, nb_de2 = randint(1, range_dice), randint(1, range_dice)
+		x1, x2 = (NbC * C) / 6 - 30, (NbC * C) / 6 + 30
+		y, r = 350, 10
 		menu.create_rectangle(x1-5, y-5, x1+47, y+47, width = 1)
 		menu.create_rectangle(x2-5, y-5, x2+47, y+47, width = 1)
 		state_launch = DISABLED
@@ -136,6 +152,60 @@ def launch_game(): #LANCEMENT DU PROGRAMME PRINCIPALE
 			dots.append(menu.create_oval(x2 + 32, (y + 16), (x2 + 32) + r, (y + 16) + r, fill='black'))
 			dots.append(menu.create_oval(x2, y + 32, x2 + r, (y + 32) + r, fill='black'))
 			dots.append(menu.create_oval(x2 + 32, y + 32, (x2 + 32) + r, (y + 32) + r, fill='black'))
+		if nb_de1 == 7:		#DE1 FACE7
+			dots.append(menu.create_oval(x1, y, x1 + r, y + r, fill='black'))
+			dots.append(menu.create_oval(x1 + 32, y, (x1 + 32) + r, y + r, fill='black'))
+			dots.append(menu.create_oval(x1, y + 16, x1 + r, (y + 16) + r, fill='black'))
+			dots.append(menu.create_oval(x1 + 32, (y + 16), (x1 + 32) + r, (y + 16) + r, fill='black'))
+			dots.append(menu.create_oval(x1, y + 32, x1 + r, (y + 32) + r, fill='black'))
+			dots.append(menu.create_oval(x1 + 32, y + 32, (x1 + 32) + r, (y + 32) + r, fill='black'))
+			dots.append(menu.create_oval(x1 + 16, (y + 16), (x1 + 16) + r, (y + 16) + r, fill='black'))
+		if nb_de2 == 7:		#DE2 FACE7
+			dots.append(menu.create_oval(x2, y, x2 + r, y + r, fill='black'))
+			dots.append(menu.create_oval(x2 + 32, y, (x2 + 32) + r, y + r, fill='black'))
+			dots.append(menu.create_oval(x2, y + 16, x2 + r, (y + 16) + r, fill='black'))
+			dots.append(menu.create_oval(x2 + 32, (y + 16), (x2 + 32) + r, (y + 16) + r, fill='black'))
+			dots.append(menu.create_oval(x2, y + 32, x2 + r, (y + 32) + r, fill='black'))
+			dots.append(menu.create_oval(x2 + 32, y + 32, (x2 + 32) + r, (y + 32) + r, fill='black'))
+			dots.append(menu.create_oval(x2 + 16, (y + 16), (x2 + 16) + r, (y + 16) + r, fill='black'))
+		if nb_de1 == 8:		#DE1 FACE8
+			dots.append(menu.create_oval(x1, y, x1 + r, y + r, fill='black'))
+			dots.append(menu.create_oval(x1 + 32, y, (x1 + 32) + r, y + r, fill='black'))
+			dots.append(menu.create_oval(x1, y + 16, x1 + r, (y + 16) + r, fill='black'))
+			dots.append(menu.create_oval(x1 + 32, (y + 16), (x1 + 32) + r, (y + 16) + r, fill='black'))
+			dots.append(menu.create_oval(x1, y + 32, x1 + r, (y + 32) + r, fill='black'))
+			dots.append(menu.create_oval(x1 + 32, y + 32, (x1 + 32) + r, (y + 32) + r, fill='black'))
+			dots.append(menu.create_oval(x1 + 16, y + 32, (x1 + 16) + r, (y + 32) + r, fill='black'))
+			dots.append(menu.create_oval(x1 + 16, y, (x1 + 16) + r, y + r, fill='black'))
+		if nb_de2 == 8:		#DE1 FACE8
+			dots.append(menu.create_oval(x2, y, x2 + r, y + r, fill='black'))
+			dots.append(menu.create_oval(x2 + 32, y, (x2 + 32) + r, y + r, fill='black'))
+			dots.append(menu.create_oval(x2, y + 16, x2 + r, (y + 16) + r, fill='black'))
+			dots.append(menu.create_oval(x2 + 32, (y + 16), (x2 + 32) + r, (y + 16) + r, fill='black'))
+			dots.append(menu.create_oval(x2, y + 32, x2 + r, (y + 32) + r, fill='black'))
+			dots.append(menu.create_oval(x2 + 32, y + 32, (x2 + 32) + r, (y + 32) + r, fill='black'))
+			dots.append(menu.create_oval(x2 + 16, y + 32, (x2 + 16) + r, (y + 32) + r, fill='black'))
+			dots.append(menu.create_oval(x2 + 16, y, (x2 + 16) + r, y + r, fill='black'))
+		if nb_de1 == 9:		#DE1 FACE9
+			dots.append(menu.create_oval(x1, y, x1 + r, y + r, fill='black'))
+			dots.append(menu.create_oval(x1 + 32, y, (x1 + 32) + r, y + r, fill='black'))
+			dots.append(menu.create_oval(x1, y + 16, x1 + r, (y + 16) + r, fill='black'))
+			dots.append(menu.create_oval(x1 + 32, (y + 16), (x1 + 32) + r, (y + 16) + r, fill='black'))
+			dots.append(menu.create_oval(x1, y + 32, x1 + r, (y + 32) + r, fill='black'))
+			dots.append(menu.create_oval(x1 + 32, y + 32, (x1 + 32) + r, (y + 32) + r, fill='black'))
+			dots.append(menu.create_oval(x1 + 16, y + 32, (x1 + 16) + r, (y + 32) + r, fill='black'))
+			dots.append(menu.create_oval(x1 + 16, y, (x1 + 16) + r, y + r, fill='black'))
+			dots.append(menu.create_oval(x1 + 16, y + 16, (x1 + 16) + r, (y + 16) + r, fill='black'))
+		if nb_de2 == 9:		#DE1 FACE9
+			dots.append(menu.create_oval(x2, y, x2 + r, y + r, fill='black'))
+			dots.append(menu.create_oval(x2 + 32, y, (x2 + 32) + r, y + r, fill='black'))
+			dots.append(menu.create_oval(x2, y + 16, x2 + r, (y + 16) + r, fill='black'))
+			dots.append(menu.create_oval(x2 + 32, (y + 16), (x2 + 32) + r, (y + 16) + r, fill='black'))
+			dots.append(menu.create_oval(x2, y + 32, x2 + r, (y + 32) + r, fill='black'))
+			dots.append(menu.create_oval(x2 + 32, y + 32, (x2 + 32) + r, (y + 32) + r, fill='black'))
+			dots.append(menu.create_oval(x2 + 16, y + 32, (x2 + 16) + r, (y + 32) + r, fill='black'))
+			dots.append(menu.create_oval(x2 + 16, y, (x2 + 16) + r, y + r, fill='black'))
+			dots.append(menu.create_oval(x2 + 16, y + 16, (x2 + 16) + r, (y + 16) + r, fill='black'))
 		remove_dice += 1
 		nb_shot = 0
 		return nb_de1, nb_de2
@@ -144,14 +214,12 @@ def launch_game(): #LANCEMENT DU PROGRAMME PRINCIPALE
 		global player, nb_shot, state_launch
 		if nb_shot == 0:
 			complet_list_map(evtX, evtY)
-			if player == 1 and abandon_j1 != 1:
-				#CREER LE RECTANGLE POUR LE J1
+			if player == 1 and abandon_j1 != 1:		#CREER LE RECTANGLE POUR LE J1
 				rect_list.append(can.create_rectangle(evtX // C * C + x0, evtY // C * C + y0, nb_de1 * C + evtX // C * C + x0, nb_de2 * C + evtY // C * C + y0, fill = color_j1))
 				can.create_text(nb_de1 / 2 * C + evtX // C * C, nb_de2 / 2 * C + evtY // C * C, text = nb_de1 * nb_de2, anchor = CENTER, fill = 'gainsboro')
 				if abandon_j2 != 1:
 					player += 1
-			elif player == 2 and abandon_j2 != 1:
-				#CREER LE RECTANGLE POUR LE J2
+			elif player == 2 and abandon_j2 != 1:	#CREER LE RECTANGLE POUR LE J2
 				rect_list.append(can.create_rectangle((evtX + C) // C * C + x0, (evtY + C) // C * C + y0, - nb_de1 * C + (evtX + C) // C * C + x0, - nb_de2 * C + (evtY + C) // C * C + y0, fill = color_j2))
 				can.create_text(- nb_de1 / 2 * C + (evtX + C) // C * C, - nb_de2 / 2 * C + (evtY + C) // C * C, text = nb_de1 * nb_de2, anchor = CENTER, fill = 'gainsboro')
 				if abandon_j1 != 1: 
@@ -162,10 +230,9 @@ def launch_game(): #LANCEMENT DU PROGRAMME PRINCIPALE
 			score()
 
 	def create_obstacle():
-		global lets_go, size_obs_1, size_obs_2
+		global size_obs_1, size_obs_2
 		if activate_obs == 1:
 			color_obs = 'gray16'
-			lets_go += 1
 			size_obs_1 = randint(2 * size_obs_compt, 4 * size_obs_compt)
 			size_obs_2 = randint(2 * size_obs_compt, 4 * size_obs_compt)
 			px0, py0 = (NbC//2 * C + x0), (NbC//2 * C + y0)
@@ -176,7 +243,7 @@ def launch_game(): #LANCEMENT DU PROGRAMME PRINCIPALE
 			complet_list_map(px0, py0)
 
 	def complet_list_map(evtX, evtY):
-		if lets_go > 0:
+		if activate_obs > 0:	#MODIFIE LA CARTE POUR LES OBSTACLES
 			for i in range(size_obs_1):
 				for k in range(size_obs_1):
 					check_list_map[NbC//2 + k][NbC//2 + i] = 9
@@ -199,7 +266,7 @@ def launch_game(): #LANCEMENT DU PROGRAMME PRINCIPALE
 					check_list_map[evtY // C - nb_2][evtX // C - nb_1] = 2
 				check_list_map[evtY // C - nb_2][evtX // C - nb_1] = 2
 				nb_2 = 0
-		print(check_list_map)
+		#print(check_list_map)
 
 	def check_error_rect(evt): #FONCTION QUI REGARDE SI LE RECTANGLE PEUT ETRE PLACE
 		global first_attempt_j1, first_attempt_j2
@@ -265,7 +332,7 @@ def launch_game(): #LANCEMENT DU PROGRAMME PRINCIPALE
 					menu.destroy()
 					can.destroy()
 					root.destroy()
-					subprocess.call(["C:/Python34/python.exe", "main_menu.py"])
+					subprocess.call(["python.exe", "main_menu.py"])
 		state_launch = NORMAL
 		button()
 		return player
@@ -277,7 +344,7 @@ def launch_game(): #LANCEMENT DU PROGRAMME PRINCIPALE
 
 	def button(): #BUTTON POUR LANCER LES DES
 		roll_button = Button(menu, state = state_launch, text = "Lancer dés")
-		roll_button_win = menu.create_window((NbC * C + x0) / 4.9, 410, anchor = 'center', height = 50, width = 150*1, window = roll_button)
+		roll_button_win = menu.create_window(150, (NbC * C + x0) / 1.75, anchor = 'center', height = 50, width = 150, window = roll_button)
 		roll_button.configure(bg = 'grey', relief = FLAT, command = make_dice)
 
 	def mvt_rect(evt): #FONCTION QUI CREE UN RECTANGLE SOUS LE CURSEUR DE LA SOURIS
@@ -294,19 +361,24 @@ def launch_game(): #LANCEMENT DU PROGRAMME PRINCIPALE
 		if player == 2 and abandon_j1 == 0 or abandon_j2 == 1:
 			scorej1 += nb_de1 * nb_de2
 			menu.delete(score_joueur1)
-			score_joueur1 = menu.create_text((NbC * C + x0) / 8.4, 575, text = scorej1, font = ("Courier",35),fill = color_j1)
+			score_joueur1 = menu.create_text(75, (NbC * C + x0) / 1.4, text = scorej1, font = ("Courier",35),fill = color_j1)
 			menu.itemconfigure(score_joueur1, text = str(scorej1))
 		if player == 1 and abandon_j2 == 0 or abandon_j1 == 1:
 			scorej2 += nb_de1 * nb_de2
 			menu.delete(score_joueur2)
-			score_joueur2 = menu.create_text((NbC * C + x0) / 3.6, 575, text = scorej2, font = ("Courier",35),fill = color_j2)
+			score_joueur2 = menu.create_text(225, (NbC * C + x0) / 1.4, text = scorej2, font = ("Courier",35),fill = color_j2)
 			menu.itemconfigure(score_joueur2, text = str(scorej2))
+		if scorej1 > scorej2:
+			crown_img = menu.create_image(300/2, (NbC * C + x0) / 5, image = red_crown, anchor='center')
+		if scorej2 > scorej1:
+			crown_img = menu.create_image(300/2, (NbC * C + x0) / 5, image = blue_crown, anchor='center')
+
 
 	give_up_button = Button(menu, text = "Abandonner")
-	give_up_button_win = menu.create_window((NbC * C + x0) / 4.9, 750, anchor = 'center', height = 50, width = 150*1, window = give_up_button)
+	give_up_button_win = menu.create_window(150, (NbC * C + x0) / 1.1, anchor = 'center', height = 50, width = 150, window = give_up_button)
 	give_up_button.configure(bg = 'grey', relief = FLAT, command = give_up)
 
-	score_separation = menu.create_text((NbC * C + x0) / 5.0, 575, text="-", font = ("Courier",35),fill = 'black')
+	score_separation = menu.create_text(150, (NbC * C + x0) / 1.4, text="-", font = ("Courier",35),fill = 'black')
 
 	create_list_map()
 	create_obstacle()
@@ -320,4 +392,4 @@ def launch_game(): #LANCEMENT DU PROGRAMME PRINCIPALE
 
 	root.mainloop()
 
-launch_game()
+#launch_game()

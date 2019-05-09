@@ -17,10 +17,10 @@ nb_shot = 0                         #Variable qui permet de savoir si le joueur 
 abandon_j1, abandon_j2 = 0, 0       #Variable qui permet de savoir si J1/J2 a abandonné ou non
 first_attempt_j1 = 0                #Variable qui détermine les 2 premiers coups de la partie
 first_attempt_j2 = 0                #Variable qui détermine les 2 premiers coups de la partie
-score_joueur1 = 0                   #??
-score_joueur2 = 0                   #??
-scorej1 = 0                         #??
-scorej2 = 0                         #??
+score_joueur1 = 0                   #Affichage score joueur 1
+score_joueur2 = 0                   #Affichage score joueur 2
+scorej1 = 0                         #Nombre de carré du joueur 1
+scorej2 = 0                         #Nombre de carrés du joueur 2
 check_list_map = []                 #Liste qui contient la carte ou sont placés les rectangles
 color_j1 = 'red'                    #Variable qui contient la couleur du joueur 1
 color_j2 = 'blue'                   #Variable qui contient la couleur du joueur 2
@@ -37,19 +37,19 @@ red_crown = PhotoImage(file='images/red_crown.gif')
 blue_crown = PhotoImage(file='images/blue_crown.gif')
 
 
-def easy_level(): #Alain
+def easy_level(): #Alain et Humam
     global NbC, C, size_obs_compt
     size_obs_compt = 1
     NbC = 20
     C = 40
 
-def normal_level(): #Alain
+def normal_level(): #Alain et Humam
     global NbC, C, size_obs_compt
     size_obs_compt = 2
     NbC = 20*size_obs_compt
     C = 40//size_obs_compt
 
-def hard_level(): #Alain
+def hard_level(): #Alain et Humam
     global NbC, C, size_obs_compt
     size_obs_compt = 3
     NbC = 20*size_obs_compt
@@ -86,7 +86,8 @@ def launch_game(): #LANCEMENT DU PROGRAMME PRINCIPALE #Alain
             can.create_line(x0, y0 + C * i, x0 + NbC * C, y0 + C * i, width = 1)
             
 
-    def throw_dice(): #FONCTION POUR CREER LES DES #Robin
+    def throw_dice(): #FONCTION POUR CREER LES DES #Robin et Alain
+
         global remove_dice, nb_de1, nb_de2, state_launch, nb_shot, range_dice
         nb_de1, nb_de2 = randint(1, range_dice), randint(1, range_dice)
         x1, x2 = (NbC * C) / 6 - 30, (NbC * C) / 6 + 30

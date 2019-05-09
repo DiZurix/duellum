@@ -37,33 +37,33 @@ red_crown = PhotoImage(file='images/red_crown.gif')
 blue_crown = PhotoImage(file='images/blue_crown.gif')
 
 
-def easy_level():
+def easy_level(): #Alain
     global NbC, C, size_obs_compt
     size_obs_compt = 1
     NbC = 20
     C = 40
 
-def normal_level():
+def normal_level(): #Alain
     global NbC, C, size_obs_compt
     size_obs_compt = 2
     NbC = 20*size_obs_compt
     C = 40//size_obs_compt
 
-def hard_level():
+def hard_level(): #Alain
     global NbC, C, size_obs_compt
     size_obs_compt = 3
     NbC = 20*size_obs_compt
     C = 40//size_obs_compt
 
-def activation_obstacle():
+def activation_obstacle(): #Alain
     global activate_obs
     activate_obs = 1
 
-def desactive_obstacle():
+def desactive_obstacle(): #Alain
     global activate_obs
     activate_obs = 0
     
-def modif_dices(nb):
+def modif_dices(nb): #Robin
     global range_dice
     if nb == 3:
         range_dice = 3
@@ -72,7 +72,7 @@ def modif_dices(nb):
     if nb == 9:
         range_dice = 9
 
-def launch_game(): #LANCEMENT DU PROGRAMME PRINCIPALE
+def launch_game(): #LANCEMENT DU PROGRAMME PRINCIPALE #Alain
     can = Canvas(root, bg = 'white', height = (NbC * C + x0), width = (NbC * C + y0))
     can.pack(side = LEFT)
     menu = Canvas(root, bg = 'white', height = (NbC * C + x0), width = 300)
@@ -80,13 +80,13 @@ def launch_game(): #LANCEMENT DU PROGRAMME PRINCIPALE
 
     crown_img = menu.create_image(300/2, (NbC * C + x0) / 5, image = empty_crown, anchor='center')
 
-    def create_grille(): #FONCTION POUR CREER LA GRILLE
+    def create_grille(): #FONCTION POUR CREER LA GRILLE #Alain
         for i in range(NbC + 1):
             can.create_line(x0 + C * i, y0, x0 + C * i, y0 + NbC * C, width = 1)
             can.create_line(x0, y0 + C * i, x0 + NbC * C, y0 + C * i, width = 1)
             
 
-    def throw_dice(): #FONCTION POUR CREER LES DES
+    def throw_dice(): #FONCTION POUR CREER LES DES #Robin
         global remove_dice, nb_de1, nb_de2, state_launch, nb_shot, range_dice
         nb_de1, nb_de2 = randint(1, range_dice), randint(1, range_dice)
         x1, x2 = (NbC * C) / 6 - 30, (NbC * C) / 6 + 30
@@ -185,18 +185,18 @@ def launch_game(): #LANCEMENT DU PROGRAMME PRINCIPALE
         remove_dice += 1
         nb_shot = 0
         
-    def create_rect(evtX, evtY): #FONCTION POUR CREER LES RECTANGLES
+    def create_rect(evtX, evtY): #FONCTION POUR CREER LES RECTANGLES #Alain
         global player, nb_shot, state_launch
         if nb_shot == 0:
             complet_list_map(evtX, evtY)
             if player == 1 and abandon_j1 != 1:     #CREER LE RECTANGLE POUR LE J1
                 rect_list.append(can.create_rectangle(evtX // C * C + x0, evtY // C * C + y0, nb_de1 * C + evtX // C * C + x0, nb_de2 * C + evtY // C * C + y0, fill = color_j1))
-                can.create_text(nb_de1 / 2 * C + evtX // C * C, nb_de2 / 2 * C + evtY // C * C, text = nb_de1 * nb_de2, anchor = CENTER, fill = 'gainsboro')
+                can.create_text(nb_de1 / 2 * C + evtX // C * C, nb_de2 / 2 * C + evtY // C * C, text = nb_de1 * nb_de2, anchor = CENTER, fill = 'gainsboro') #Alain et Humam
                 if abandon_j2 != 1:
                     player += 1
             elif player == 2 and abandon_j2 != 1:   #CREER LE RECTANGLE POUR LE J2
                 rect_list.append(can.create_rectangle((evtX + C) // C * C + x0, (evtY + C) // C * C + y0, - nb_de1 * C + (evtX + C) // C * C + x0, - nb_de2 * C + (evtY + C) // C * C + y0, fill = color_j2))
-                can.create_text(- nb_de1 / 2 * C + (evtX + C) // C * C, - nb_de2 / 2 * C + (evtY + C) // C * C, text = nb_de1 * nb_de2, anchor = CENTER, fill = 'gainsboro')
+                can.create_text(- nb_de1 / 2 * C + (evtX + C) // C * C, - nb_de2 / 2 * C + (evtY + C) // C * C, text = nb_de1 * nb_de2, anchor = CENTER, fill = 'gainsboro') #Alain et Humam
                 if abandon_j1 != 1: 
                     player -= 1
             nb_shot += 1
@@ -204,7 +204,7 @@ def launch_game(): #LANCEMENT DU PROGRAMME PRINCIPALE
             button()
             score()
 
-    def create_obstacle():
+    def create_obstacle(): #Alain
         global size_obs_1, size_obs_2
         if activate_obs == 1:
             color_obs = 'gray16'
@@ -217,7 +217,7 @@ def launch_game(): #LANCEMENT DU PROGRAMME PRINCIPALE
             rect_list.append(can.create_rectangle(px0 - C * size_obs_2, py0 + C * size_obs_2, px0, py0, fill = color_obs))
             complet_list_map(px0, py0)
 
-    def complet_list_map(evtX, evtY):
+    def complet_list_map(evtX, evtY): #Alain
         if activate_obs > 0:    #MODIFIE LA CARTE POUR LES OBSTACLES
             for i in range(size_obs_1):
                 for k in range(size_obs_1):
@@ -243,7 +243,7 @@ def launch_game(): #LANCEMENT DU PROGRAMME PRINCIPALE
                 nb_2 = 0
         #print(check_list_map)
 
-    def check_error_rect(evt): #FONCTION QUI REGARDE SI LE RECTANGLE PEUT ETRE PLACE
+    def check_error_rect(evt): #FONCTION QUI REGARDE SI LE RECTANGLE PEUT ETRE PLACE #Alain
         global first_attempt_j1, first_attempt_j2
         placement_error = 0
         check_contour = 0
@@ -276,7 +276,7 @@ def launch_game(): #LANCEMENT DU PROGRAMME PRINCIPALE
             if first_attempt_j1 > 0 and player == 1 or first_attempt_j2 > 0 and player == 2:
                 create_rect(evtX, evtY)
 
-    def create_list_map(): #FONCTION QUI CREER LA CARTE
+    def create_list_map(): #FONCTION QUI CREER LA CARTE #Alain
         for i in range(NbC + 1):
             check_list_map.append([0] * (NbC+1))
             if i == NbC:
@@ -284,7 +284,7 @@ def launch_game(): #LANCEMENT DU PROGRAMME PRINCIPALE
                     check_list_map[i][NbC] = 9
                     check_list_map[NbC][i] = 9
 
-    def give_up(): #FONCTION QUI PERMET D'ABANDONNER
+    def give_up(): #FONCTION QUI PERMET D'ABANDONNER #Robin
         global abandon_j1, abandon_j2, player, state_launch
         if player == 1:
             abandon_j1 = 1
@@ -312,17 +312,17 @@ def launch_game(): #LANCEMENT DU PROGRAMME PRINCIPALE
         button()
         return player
 
-    def return_rectangle(evt): #FONCTION POUR RETOURNER LE RECTANGLE
+    def return_rectangle(evt): #FONCTION POUR RETOURNER LE RECTANGLE #Alain
         global nb_de1, nb_de2
         nb_de1, nb_de2 = nb_de2, nb_de1
         root.event_generate('<Motion>')
 
-    def button(): #BUTTON POUR LANCER LES DES
+    def button(): #BOUTON POUR LANCER LES DES  #Robin
         roll_button = Button(menu, state = state_launch, text = "Lancer dés")
         roll_button_win = menu.create_window(150, (NbC * C + x0) / 1.75, anchor = 'center', height = 50, width = 150, window = roll_button)
         roll_button.configure(bg = 'grey', relief = FLAT, command = throw_dice)
 
-    def mvt_rect(evt): #FONCTION QUI CREE UN RECTANGLE SOUS LE CURSEUR DE LA SOURIS
+    def mvt_rect(evt): #FONCTION QUI CREE UN RECTANGLE SOUS LE CURSEUR DE LA SOURIS #Alain
         reduc = 5
         for i in range(len(moving_rect)):
             can.delete(moving_rect[i])
@@ -331,7 +331,7 @@ def launch_game(): #LANCEMENT DU PROGRAMME PRINCIPALE
         if player == 2 and state_launch == DISABLED:
             moving_rect.append(can.create_rectangle(evt.x + reduc, evt.y + reduc, - nb_de1 * C + evt.x + x0 + reduc, - nb_de2 * C + evt.y + y0 + reduc, fill = color_j2))
 
-    def score(): #FONCTION QUI AFFICHE LES SCORES
+    def score(): #FONCTION QUI AFFICHE LES SCORES #Robin
         global score_joueur1, score_joueur2, scorej1, scorej2
         if player == 2 and abandon_j1 == 0 or abandon_j2 == 1:
             scorej1 += nb_de1 * nb_de2
@@ -367,4 +367,4 @@ def launch_game(): #LANCEMENT DU PROGRAMME PRINCIPALE
 
     root.mainloop()
 
-launch_game()
+#launch_game()

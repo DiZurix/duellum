@@ -35,6 +35,8 @@ root.resizable(False, False)
 empty_crown = PhotoImage(file='images/empty_crown.gif')
 red_crown = PhotoImage(file='images/red_crown.gif')
 blue_crown = PhotoImage(file='images/blue_crown.gif')
+text_abandonner = PhotoImage(file='images/text_abandonner.gif')
+text_lancerdes = PhotoImage(file='images/text_lancerdes.gif')
 
 
 def easy_level(): #Alain et Humam
@@ -295,16 +297,16 @@ def launch_game(): #LANCEMENT DU PROGRAMME PRINCIPALE #Alain
             player = 1
         if abandon_j1 == 1 and abandon_j2 == 1:
             if scorej1 > scorej2:
-                    bn= messagebox.askquestion("Resultats", ("Le joueur 1 a gagné !\nVoulez vous rejouer ?"))
+                    message= messagebox.askquestion("Resultats", ("Le joueur 1 a gagné !\nVoulez vous rejouer ?"))
             elif scorej1 < scorej2:
-                    bn= messagebox.askquestion("Resultats", ("Le joueur 2 a gagné !\nVoulez vous rejouer ?"))
+                    message= messagebox.askquestion("Resultats", ("Le joueur 2 a gagné !\nVoulez vous rejouer ?"))
             elif scorej1 == scorej2:
-                    bn= messagebox.askquestion("Resultats", ("Egalité ! Personne n'a gagné\nVoulez vous rejouer ?"))
-            if bn == 'no':
+                    message= messagebox.askquestion("Resultats", ("Egalité ! Personne n'a gagné\nVoulez vous rejouer ?"))
+            if message == 'no':
                     menu.destroy()
                     can.destroy()
                     root.destroy()
-            if bn == 'yes':
+            if message == 'yes':
                     menu.destroy()
                     can.destroy()
                     root.destroy()
@@ -318,9 +320,9 @@ def launch_game(): #LANCEMENT DU PROGRAMME PRINCIPALE #Alain
         nb_de1, nb_de2 = nb_de2, nb_de1
         root.event_generate('<Motion>')
 
-    def button(): #BOUTON POUR LANCER LES DES  #Robin
-        roll_button = Button(menu, state = state_launch, text = "Lancer dés")
-        roll_button_win = menu.create_window(150, (NbC * C + x0) / 1.75, anchor = 'center', height = 50, width = 150, window = roll_button)
+    def button(): #BOUTON POUR LANCER LES DES  #Robin et Alain
+        roll_button = Button(menu, state = state_launch, image = text_lancerdes)
+        roll_button_win = menu.create_window(150, (NbC * C + x0) / 1.75, anchor = 'center', width = 200, window = roll_button)
         roll_button.configure(bg = 'grey', relief = FLAT, command = throw_dice)
 
     def mvt_rect(evt): #FONCTION QUI CREE UN RECTANGLE SOUS LE CURSEUR DE LA SOURIS #Alain
@@ -350,8 +352,8 @@ def launch_game(): #LANCEMENT DU PROGRAMME PRINCIPALE #Alain
             crown_img = menu.create_image(300/2, (NbC * C + x0) / 5, image = blue_crown, anchor='center')
 
 
-    give_up_button = Button(menu, text = "Abandonner")
-    give_up_button_win = menu.create_window(150, (NbC * C + x0) / 1.1, anchor = 'center', height = 50, width = 150, window = give_up_button)
+    give_up_button = Button(menu, image = text_abandonner)
+    give_up_button_win = menu.create_window(150, (NbC * C + x0) / 1.1, anchor = 'center', width = 200, window = give_up_button)
     give_up_button.configure(bg = 'grey', relief = FLAT, command = give_up)
 
     score_separation = menu.create_text(150, (NbC * C + x0) / 1.4, text="-", font = ("Courier",35),fill = 'black')
